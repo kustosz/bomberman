@@ -7,7 +7,7 @@ define("level/Empty",
                this.x = x;
                this.y = y;
                this.type = "empty";
-               this.blocking = true;
+               this.blocking = false;
                this.bomb = null;
                this.flame = null;
                this.passExlplosion = true;
