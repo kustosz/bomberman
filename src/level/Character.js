@@ -35,9 +35,6 @@ define("level/Character",
                                                          "right");
                    if (!collide) {
                        this.x += this.speedX;
-                   } else {
-                       this.x = (Math.floor(this.x / settings.SQUARE_WIDTH) + 1) *
-                                    settings.SQUARE_WIDTH - this.width - 1;
                    }
                } else if (this.speedX < 0) {
                    collide = this.board.detectCollisions(this.x + this.speedX, this.y,
@@ -45,9 +42,6 @@ define("level/Character",
                                                          "left");
                    if (!collide) {
                        this.x += this.speedX;
-                   } else {
-                       this.x = Math.floor(this.x / settings.SQUARE_WIDTH) *
-                                    settings.SQUARE_WIDTH + 1;
                    }
                }
 
@@ -57,9 +51,6 @@ define("level/Character",
                                                          "down");
                    if(!collide) {
                        this.y += this.speedY;
-                   } else {
-                       this.y = (Math.floor(this.y / settings.SQUARE_HEIGHT) + 1) *
-                                    settings.SQUARE_HEIGHT - this.height - 1;
                    }
                } else if (this.speedY < 0) {
                    collide = this.board.detectCollisions(this.x, this.y + this.speedY,
@@ -67,11 +58,13 @@ define("level/Character",
                                                          "up");
                    if(!collide) {
                        this.y += this.speedY;
-                   } else {
-                       this.y = Math.floor(this.y / settings.SQUARE_HEIGHT) *
-                                    settings.SQUARE_HEIGHT + 1;
                    }
                }
+
+               this.row = Math.floor((this.y + this.height / 2) /
+                               settings.SQUARE_HEIGHT);
+               this.col = Math.floor((this.x + this.width / 2) /
+                               settings.SQUARE_WIDTH);
 
            }
 
@@ -114,6 +107,9 @@ define("level/Character",
                    return false;
                case 38:
                    this.directions.up = 1;
+                   return false;
+               case 32:
+                   this.board.addBomb(this.row, this.col);
                    return false;
                }
                return true;

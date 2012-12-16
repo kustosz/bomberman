@@ -2,7 +2,7 @@ requirejs(['level/Board', 'level/context'],
 function (Board, context) {
     var b = new Board(context,
                       {bricksDensity: 0.1,
-                       characterBaseSpeed: 8});
+                       characterBaseSpeed: 3});
     document.onkeydown = function (e) {
         return b.character.handleKeydown(e.keyCode);
     }
@@ -12,5 +12,5 @@ function (Board, context) {
     setInterval(function () {
         b.update();
         b.draw();
-    }, 30);
+    }, 20);
 });

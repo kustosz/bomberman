@@ -3,8 +3,9 @@ define("level/Board",
         "level/Concrete",
         "level/Empty",
         "level/Character",
+        "level/Bomb",
         "level/settings"],
-       function (Bricks, Concrete, Empty, Character, settings) {
+       function (Bricks, Concrete, Empty, Character, Bomb, settings) {
 
            var getCol = function (x) {
                return Math.floor(x / settings.SQUARE_WIDTH);
@@ -150,6 +151,30 @@ define("level/Board",
                }
                return collide;
            }
+
+           Board.prototype.addBomb = function (row, col) {
+               if (this.blocks[row][col].bomb === null) {
+                   var bomb = new Bomb(this,
+                                       col * settings.SQUARE_WIDTH,
+                                       row * settings.SQUARE_HEIGHT);
+                   this.blocks[row][col].bomb = bomb;
+                   this.blocks[row][col].blocking = true;
+                   this.bombs.push(bomb);
+               }
+           }
+
+           Board.prototype.detonateBomb = function (bomb) {
+               var row = getRow(bomb.y),
+                   col = getCol(bomb.x);
+
+               this.blocks[row][col].bomb = null;
+               this.blocks[row][col].blocking = false;
+               if(this.bombs.indexOf(bomb) !== -1) {
+                   this.bombs.splice(this.bombs.indexOf(bomb), 1);
+               }
+           }
+
+
 
 
 
