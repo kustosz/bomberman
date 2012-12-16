@@ -9,7 +9,7 @@ define("level/Concrete",
                this.type = "concrete";
                this.blocking = true;
                this.bomb = null;
-               this.flame = null;
+               this.flames = null;
                this.passExplosion = false;
            };
 
@@ -17,10 +17,6 @@ define("level/Concrete",
 
            Concrete.prototype.drawing = new Image();
            Concrete.prototype.drawing.src = settings.CONCRETE_SRC;
-
-           Concrete.prototype.detonate = function () {
-               return this.passExplosion;
-           };
 
            return Concrete;
        }

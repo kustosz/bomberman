@@ -9,7 +9,7 @@ define("level/Bricks",
                this.type = "bricks";
                this.blocking = true;
                this.bomb = null;
-               this.flame = null;
+               this.flames = null;
                this.passExplosion = false;
            };
 
@@ -18,9 +18,6 @@ define("level/Bricks",
            Bricks.prototype.drawing = new Image();
            Bricks.prototype.drawing.src = settings.BRICKS_SRC;
 
-           Bricks.prototype.detonate = function () {
-               return this.passExplosion;
-           };
 
            return Bricks;
        }

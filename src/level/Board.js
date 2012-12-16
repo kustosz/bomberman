@@ -4,8 +4,9 @@ define("level/Board",
         "level/Empty",
         "level/Character",
         "level/Bomb",
+        "level/Flames",
         "level/settings"],
-       function (Bricks, Concrete, Empty, Character, Bomb, settings) {
+       function (Bricks, Concrete, Empty, Character, Bomb, Flames, settings) {
 
            var getCol = function (x) {
                return Math.floor(x / settings.SQUARE_WIDTH);
@@ -20,6 +21,7 @@ define("level/Board",
                var i, j;
                var self = this;
 
+               this.options = options;
                this.context = context;
                this.paperWidth = context.canvas.width;
                this.paperHeight = context.canvas.height;
@@ -93,8 +95,14 @@ define("level/Board",
 
            Board.prototype.draw = function () {
                var i, j;
-               for (i = 0; i < this.blocks.length; i += 1) {
-                   for (j = 0; j < this.blocks[i].length; j += 1) {
+               var mincol = Math.floor(this.offsetX / settings.SQUARE_WIDTH),
+                   minrow = Math.floor(this.offsetY / settings.SQUARE_HEIGHT),
+                   maxcol = Math.floor((this.paperWidth + this.offsetX - 1) /
+                                            settings.SQUARE_WIDTH),
+                   maxrow = Math.floor((this.paperHeight + this.offsetY - 1) /
+                                            settings.SQUARE_HEIGHT);
+               for (i = minrow; i <= maxrow; i += 1) {
+                   for (j = mincol; j <= maxcol; j += 1) {
                        this.blocks[i][j].draw();
                    }
                }
@@ -153,7 +161,8 @@ define("level/Board",
            }
 
            Board.prototype.addBomb = function (row, col) {
-               if (this.blocks[row][col].bomb === null) {
+               if (this.blocks[row][col].bomb === null &&
+                       this.bombs.length < this.options.bombs) {
                    var bomb = new Bomb(this,
                                        col * settings.SQUARE_WIDTH,
                                        row * settings.SQUARE_HEIGHT);
@@ -166,17 +175,84 @@ define("level/Board",
            Board.prototype.detonateBomb = function (bomb) {
                var row = getRow(bomb.y),
                    col = getCol(bomb.x);
+               var i = 1;
+
+               if (this.blocks[row][col].bomb === null ) {
+                   return;      // bomb already detonated
+               }
 
                this.blocks[row][col].bomb = null;
                this.blocks[row][col].blocking = false;
+               this.addFlames(row, col);
                if(this.bombs.indexOf(bomb) !== -1) {
                    this.bombs.splice(this.bombs.indexOf(bomb), 1);
                }
+
+               for (i = 1; i <= this.options.bombRange; i += 1) {
+                   if (!this.detonateSquare(row + i, col)) {
+                       break;
+                   }
+               }
+
+               for (i = 1; i <= this.options.bombRange; i += 1) {
+                   if (!this.detonateSquare(row - i, col)) {
+                       break;
+                   }
+               }
+
+               for (i = 1; i <= this.options.bombRange; i += 1) {
+                   if (!this.detonateSquare(row, col - i)) {
+                       break;
+                   }
+               }
+
+               for (i = 1; i <= this.options.bombRange; i += 1) {
+                   if (!this.detonateSquare(row, col + i)) {
+                       break;
+                   }
+               }
+           }
+
+           Board.prototype.detonateSquare = function (row, col) {
+
+               if (this.blocks[row][col].bomb !== null) {
+                   this.detonateBomb(this.blocks[row][col].bomb);
+               }
+
+               if (this.blocks[row][col].type === "empty") {
+                   this.addFlames(row, col);
+               } else if (this.blocks[row][col].type === "bricks") {
+                   this.blocks[row][col] = new Empty(this,
+                                                     this.blocks[row][col].x,
+                                                     this.blocks[row][col].y);
+                   this.blocks[row][col].passExplosion = false;
+                   this.addFlames(row, col);
+               }
+
+               return this.blocks[row][col].passExplosion;
            }
 
 
+           Board.prototype.addFlames = function (row, col) {
+               if (this.blocks[row][col].flames === null) {
+                   var flames = new Flames(this,
+                                           col * settings.SQUARE_WIDTH,
+                                           row * settings.SQUARE_HEIGHT);
+                   this.blocks[row][col].flames = flames;
+                   this.flames.push(flames);
+               }
+           }
 
+           Board.prototype.deleteFlames = function (flames) {
+               var row = getRow(flames.y),
+                   col = getCol(flames.x);
 
+               this.blocks[row][col].flames = null;
+               this.blocks[row][col].passExplosion = true;
+               if(this.flames.indexOf(flames) !== -1) {
+                   this.flames.splice(this.flames.indexOf(flames), 1);
+               }
+           }
 
 
 

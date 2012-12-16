@@ -9,18 +9,14 @@ define("level/Empty",
                this.type = "empty";
                this.blocking = false;
                this.bomb = null;
-               this.flame = null;
-               this.passExlplosion = true;
+               this.flames = null;
+               this.passExplosion = true;
            };
 
            Empty.prototype = new Block();
 
            Empty.prototype.drawing = new Image();
            Empty.prototype.drawing.src = settings.EMPTY_SRC;
-
-           Empty.prototype.detonate = function () {
-               return this.passExplosion;
-           };
 
            return Empty;
        }

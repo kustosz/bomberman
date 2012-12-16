@@ -1,8 +1,10 @@
 requirejs(['level/Board', 'level/context'],
 function (Board, context) {
     var b = new Board(context,
-                      {bricksDensity: 0.1,
-                       characterBaseSpeed: 3});
+                      {bricksDensity: 0.3,
+                       characterBaseSpeed: 3,
+                       bombs: 8,
+                       bombRange: 3});
     document.onkeydown = function (e) {
         return b.character.handleKeydown(e.keyCode);
     }
