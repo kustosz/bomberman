@@ -7,6 +7,7 @@ define({
     CONCRETE_SRC: "images/concrete.png",
     EMPTY_SRC: "images/empty.png",
     CHARACTER_SRC: "images/character.png",
+    CHARACTER_DEAD_SRC: "images/characterKilled.png",
     BOMB_SRC: "images/bomb.png",
     FLAMES_SRC: "images/flames.png",
     CHARACTER_WIDTH: 40,

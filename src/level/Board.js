@@ -254,6 +254,32 @@ define("level/Board",
                }
            }
 
+           Board.prototype.collideWithFlames = function (x, y, width, height) {
+               var row,
+                   col;
+               var collide = false;
+
+               row = getRow(y);
+               col = getCol(x);
+               if (this.blocks[row][col].flames !== null) {
+                   collide = true;
+               }
+               col = getCol(x + width);
+               if (this.blocks[row][col].flames !== null) {
+                   collide = true;
+               }
+               row = getRow(y + height);
+               if (this.blocks[row][col].flames !== null) {
+                   collide = true;
+               }
+               col = getCol(x);
+               if (this.blocks[row][col].flames !== null) {
+                   collide = true;
+               }
+
+               return collide;
+           }
+
 
 
            return Board;

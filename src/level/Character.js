@@ -17,12 +17,21 @@ define("level/Character",
                    down: 0
                };
                this.baseSpeed = options.characterBaseSpeed;
+               this.alive = true;
            }
 
-           Character.prototype.drawing = new Image();
-           Character.prototype.drawing.src = settings.CHARACTER_SRC;
+           Character.prototype.drawingAlive = new Image();
+           Character.prototype.drawingAlive.src = settings.CHARACTER_SRC;
+
+           Character.prototype.drawingDead = new Image();
+           Character.prototype.drawingDead.src = settings.CHARACTER_DEAD_SRC;
 
            Character.prototype.update = function () {
+
+               if (!this.alive) {
+                   return;
+               }
+
                var collide;
                this.speedX = this.directions.right * this.baseSpeed;
                this.speedX -= this.directions.left * this.baseSpeed;
@@ -61,6 +70,10 @@ define("level/Character",
                    }
                }
 
+               if (this.board.collideWithFlames(this.x, this.y, this.width, this.height)) {
+                   this.alive = false;
+               }
+
                this.row = Math.floor((this.y + this.height / 2) /
                                settings.SQUARE_HEIGHT);
                this.col = Math.floor((this.x + this.width / 2) /
@@ -69,9 +82,15 @@ define("level/Character",
            }
 
            Character.prototype.draw = function () {
-               this.board.context.drawImage(this.drawing,
-                                            this.x - this.board.offsetX,
-                                            this.y - this.board.offsetY);
+               if (this.alive) {
+                   this.board.context.drawImage(this.drawingAlive,
+                                                this.x - this.board.offsetX,
+                                                this.y - this.board.offsetY);
+               } else {
+                   this.board.context.drawImage(this.drawingDead,
+                                                this.x - this.board.offsetX,
+                                                this.y - this.board.offsetY);
+               }
            }
 
            Character.prototype.handleKeyup = function (keyCode) {
