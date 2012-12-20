@@ -4,7 +4,8 @@ function (Board, context) {
                       {bricksDensity: 0.3,
                        characterBaseSpeed: 3,
                        bombs: 8,
-                       bombRange: 3});
+                       bombRange: 3,
+                       goombas: [15]});
     document.onkeydown = function (e) {
         return b.character.handleKeydown(e.keyCode);
     }

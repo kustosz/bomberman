@@ -5,20 +5,15 @@ define("level/Board",
         "level/Character",
         "level/Bomb",
         "level/Flames",
+        "level/Goomba",
         "level/settings"],
-       function (Bricks, Concrete, Empty, Character, Bomb, Flames, settings) {
+       function (Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, settings) {
 
-           var getCol = function (x) {
-               return Math.floor(x / settings.SQUARE_WIDTH);
-           }
-
-           var getRow = function (y) {
-               return Math.floor(y / settings.SQUARE_HEIGHT);
-           }
 
            var Board = function (context, options) {
 
                var i, j;
+               var t;
                var self = this;
 
                this.options = options;
@@ -72,15 +67,55 @@ define("level/Board",
                                              settings.SQUARE_WIDTH,
                                              2 * settings.SQUARE_HEIGHT);
 
+               var randomCoords = function () {
+                   var col = 0,
+                       row = 0;
+
+                   while (self.blocks[row][col].blocking) {
+                       row = Math.floor(Math.random() * (settings.ROWS - 4)) + 4;
+                       col = Math.floor(Math.random() * (settings.COLS - 4)) + 4;
+                   }
+
+                   return {
+                       x: col * settings.SQUARE_WIDTH +
+                           (settings.SQUARE_WIDTH - settings.GOOMBA_WIDTH) / 2,
+                       y: row * settings.SQUARE_HEIGHT +
+                           (settings.SQUARE_HEIGHT - settings.GOOMBA_HEIGHT) / 2
+                   }
+               }
+
+               for (i = 0; i < options.goombas.length; i += 1) {
+                   for (j = 0; j < options.goombas[i]; j += 1) {
+                       t = randomCoords();
+                       this.goombas.push(new Goomba(this, t.x, t.y, i));
+                   }
+               }
+
            }
+
+           var getCol = function (x) {
+               return Math.floor(x / settings.SQUARE_WIDTH);
+           }
+
+           var getRow = function (y) {
+               return Math.floor(y / settings.SQUARE_HEIGHT);
+           }
+
+           Board.prototype.getCol = getCol;
+           Board.prototype.getRow = getRow;
 
            Board.prototype.update = function () {
                var i;
+               this.character.update();
                for (i = 0; i < this.goombas.length; i += 1) {
                    this.goombas[i].update();
+                   if (this.goombas[i].collideWithCharacter(this.character.x,
+                                                            this.character.y,
+                                                            this.character.width,
+                                                            this.character.height)) {
+                       this.character.die();
+                   }
                }
-
-               this.character.update();
 
                this.offsetX = this.character.x - this.paperWidth / 2;
                this.offsetX = Math.max(this.offsetX, 0);
@@ -234,22 +269,23 @@ define("level/Board",
 
 
            Board.prototype.addFlames = function (row, col) {
-               if (this.blocks[row][col].flames === null) {
-                   var flames = new Flames(this,
-                                           col * settings.SQUARE_WIDTH,
-                                           row * settings.SQUARE_HEIGHT);
-                   this.blocks[row][col].flames = flames;
-                   this.flames.push(flames);
-               }
+               var flames = new Flames(this,
+                                       col * settings.SQUARE_WIDTH,
+                                       row * settings.SQUARE_HEIGHT);
+               this.blocks[row][col].flames = flames;
+               this.flames.push(flames);
            }
 
            Board.prototype.deleteFlames = function (flames) {
                var row = getRow(flames.y),
                    col = getCol(flames.x);
 
-               this.blocks[row][col].flames = null;
-               this.blocks[row][col].passExplosion = true;
-               if(this.flames.indexOf(flames) !== -1) {
+               if (this.blocks[row][col].flames === flames) {
+                   this.blocks[row][col].flames = null;
+                   this.blocks[row][col].passExplosion = true;
+               }
+
+               if (this.flames.indexOf(flames) !== -1) {
                    this.flames.splice(this.flames.indexOf(flames), 1);
                }
            }
@@ -280,6 +316,11 @@ define("level/Board",
                return collide;
            }
 
+           Board.prototype.deleteGoomba = function (goomba) {
+               if (this.goombas.indexOf(goomba) !== -1) {
+                   this.goombas.splice(this.goombas.indexOf(goomba), 1);
+               }
+           }
 
 
            return Board;

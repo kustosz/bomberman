@@ -12,8 +12,16 @@ define({
     FLAMES_SRC: "images/flames.png",
     CHARACTER_WIDTH: 40,
     CHARACTER_HEIGHT: 40,
-    CHARACTER_INITIAL_X: 130,
-    CHARACTER_INITIAL_Y: 130,
+    CHARACTER_INITIAL_X: 70,
+    CHARACTER_INITIAL_Y: 70,
     BOMB_TIMEOUT: 3000,
-    FLAMES_TIMEOUT: 1000
+    FLAMES_TIMEOUT: 1000,
+    GOOMBA_TIMEOUT: 1000,
+    GOOMBA_WIDTH: 40,
+    GOOMBA_HEIGHT: 40,
+    GOOMBAS: [{SRC: "images/goombaLevel0.png",
+               DEAD_SRC: "images/goombaLevel0Killed.png",
+               BASE_SPEED: 2,
+               PR_TURN: 0.5,
+               PR_TURN_BACK: 0.2}]
 });

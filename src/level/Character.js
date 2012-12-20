@@ -71,7 +71,7 @@ define("level/Character",
                }
 
                if (this.board.collideWithFlames(this.x, this.y, this.width, this.height)) {
-                   this.alive = false;
+                   this.die();
                }
 
                this.row = Math.floor((this.y + this.height / 2) /
@@ -79,6 +79,10 @@ define("level/Character",
                this.col = Math.floor((this.x + this.width / 2) /
                                settings.SQUARE_WIDTH);
 
+           }
+
+           Character.prototype.die = function () {
+               this.alive = false;
            }
 
            Character.prototype.draw = function () {
@@ -128,7 +132,9 @@ define("level/Character",
                    this.directions.up = 1;
                    return false;
                case 32:
-                   this.board.addBomb(this.row, this.col);
+                   if (this.alive) {
+                       this.board.addBomb(this.row, this.col);
+                   }
                    return false;
                }
                return true;
