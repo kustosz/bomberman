@@ -83,6 +83,7 @@ define("level/Character",
 
            Character.prototype.die = function () {
                this.alive = false;
+               this.board.exitFailure();
            }
 
            Character.prototype.draw = function () {

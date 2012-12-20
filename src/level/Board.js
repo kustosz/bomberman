@@ -6,11 +6,12 @@ define("level/Board",
         "level/Bomb",
         "level/Flames",
         "level/Goomba",
+        "level/Door",
         "level/settings"],
-       function (Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, settings) {
+       function (Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, Door, settings) {
 
 
-           var Board = function (context, options) {
+           var Board = function (context, options, onSuccess, onFailure) {
 
                var i, j;
                var t;
@@ -29,6 +30,15 @@ define("level/Board",
                this.goombas = [];
                this.blocks = [];
                this.character = new Character(this, options);
+               this.updates = true;
+
+               this.onSuccess = function () {
+                   onSuccess();
+               }
+
+               this.onFailure = function () {
+                   onFailure();
+               }
 
                for (i = 0; i < settings.ROWS; i += 1) {
                    this.blocks.push([]);
@@ -66,6 +76,18 @@ define("level/Board",
                this.blocks[2][1] = new Empty(this,
                                              settings.SQUARE_WIDTH,
                                              2 * settings.SQUARE_HEIGHT);
+
+               var doorCoords = {
+                   row: 0,
+                   col: 0
+               };
+
+               while (this.blocks[doorCoords.row][doorCoords.col].type !== 'bricks') {
+                   doorCoords.row = Math.floor(Math.random() * (settings.ROWS - 4)) + 4;
+                   doorCoords.col = Math.floor(Math.random() * (settings.COLS - 4)) + 4;
+               }
+
+               this.door = new Door(this, doorCoords.row, doorCoords.col);
 
                var randomCoords = function () {
                    var col = 0,
@@ -106,6 +128,15 @@ define("level/Board",
 
            Board.prototype.update = function () {
                var i;
+
+               if (this.checkSuccess()) {
+                   this.exitSuccess();
+               }
+
+               if (!this.updates) {
+                   return;
+               }
+
                this.character.update();
                for (i = 0; i < this.goombas.length; i += 1) {
                    this.goombas[i].update();
@@ -132,6 +163,7 @@ define("level/Board",
                var i, j;
                var mincol = Math.floor(this.offsetX / settings.SQUARE_WIDTH),
                    minrow = Math.floor(this.offsetY / settings.SQUARE_HEIGHT),
+                   minrow = Math.max(minrow, 0);
                    maxcol = Math.floor((this.paperWidth + this.offsetX - 1) /
                                             settings.SQUARE_WIDTH),
                    maxrow = Math.floor((this.paperHeight + this.offsetY - 1) /
@@ -141,6 +173,7 @@ define("level/Board",
                        this.blocks[i][j].draw();
                    }
                }
+               this.door.draw();
                for (i = 0; i < this.bombs.length; i += 1) {
                    this.bombs[i].draw();
                }
@@ -321,6 +354,35 @@ define("level/Board",
                    this.goombas.splice(this.goombas.indexOf(goomba), 1);
                }
            }
+
+           Board.prototype.checkSuccess = function () {
+               var success = true,
+                   centerRow = getRow(this.character.y + this.character.height / 2),
+                   centerCol = getCol(this.character.x + this.character.width / 2);
+               if (this.goombas.length > 0) {
+                   success = false;
+               }
+               if (centerRow !== this.door.row || centerCol !== this.door.col) {
+                   success = false;
+               }
+               return success;
+           }
+
+           Board.prototype.exitSuccess = function () {
+               var self = this;
+               this.updates = false;
+               setTimeout(function () {
+                   self.onSuccess();
+               }, settings.SUCCESS_TIMEOUT);
+           }
+
+           Board.prototype.exitFailure = function () {
+               var self = this;
+               setTimeout(function () {
+                   self.onFailure();
+               }, settings.GAMEOVER_TIMEOUT);
+           }
+
 
 
            return Board;

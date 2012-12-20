@@ -153,7 +153,7 @@ define("level/Goomba",
                    }
                }
                if (this.speedX > 0) {
-                   if (!this.board.detectCollisions(this.x, this.y,
+                   if (!this.board.detectCollisions(this.x + this.speedX, this.y,
                                                     this.width, this.height,
                                                     "right")) {
                        this.x += this.speedX;
@@ -161,7 +161,7 @@ define("level/Goomba",
                        this.turnBack(true);
                    }
                } else  if (this.speedX < 0) {
-                   if (!this.board.detectCollisions(this.x, this.y, 
+                   if (!this.board.detectCollisions(this.x + this.speedX, this.y,
                                                     this.width, this.height,
                                                     "left")) {
                        this.x += this.speedX;
@@ -169,7 +169,7 @@ define("level/Goomba",
                        this.turnBack(true);
                    }
                } else if (this.speedY > 0) {
-                   if (!this.board.detectCollisions(this.x, this.y,
+                   if (!this.board.detectCollisions(this.x, this.y + this.speedY,
                                                     this.width, this.height,
                                                     "down")) {
                        this.y += this.speedY;
@@ -177,7 +177,7 @@ define("level/Goomba",
                        this.turnBack(true);
                    }
                } else if (this.speedY < 0) {
-                   if (!this.board.detectCollisions(this.x, this.y,
+                   if (!this.board.detectCollisions(this.x, this.y + this.speedY,
                                                     this.width, this.height,
                                                     "up")) {
                        this.y += this.speedY;
@@ -193,7 +193,7 @@ define("level/Goomba",
                bottom = Math.min(this.y + this.height, y + height);
                left = Math.max(this.x, x);
                right = Math.min(this.x + this.width, x + width);
-               return left <= right && top <= bottom;
+               return left <= right - 5 && top <= bottom - 5;
            }
 
 

@@ -15,7 +15,7 @@ define({
     CHARACTER_INITIAL_X: 70,
     CHARACTER_INITIAL_Y: 70,
     BOMB_TIMEOUT: 3000,
-    FLAMES_TIMEOUT: 1000,
+    FLAMES_TIMEOUT: 500,
     GOOMBA_TIMEOUT: 1000,
     GOOMBA_WIDTH: 40,
     GOOMBA_HEIGHT: 40,
@@ -23,5 +23,12 @@ define({
                DEAD_SRC: "images/goombaLevel0Killed.png",
                BASE_SPEED: 2,
                PR_TURN: 0.5,
-               PR_TURN_BACK: 0.2}]
+               PR_TURN_BACK: 0.2},
+              {SRC: "images/goombaLevel0.png",
+               DEAD_SRC: "images/goombaLevel0Killed.png",
+               BASE_SPEED: 9,
+               PR_TURN: 0.5}],
+    GAMEOVER_TIMEOUT: 5000,
+    SUCCESS_TIMEOUT: 1000,
+    DOOR_SRC: "images/door.png"
 });
