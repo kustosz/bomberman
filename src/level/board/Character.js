@@ -1,5 +1,5 @@
-define("level/Character",
-       ["level/settings"],
+define("level/board/Character",
+       ["level/board/settings"],
        function (settings) {
 
            var Character = function (board, options) {
@@ -90,11 +90,11 @@ define("level/Character",
                if (this.alive) {
                    this.board.context.drawImage(this.drawingAlive,
                                                 this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY);
+                                                this.y - this.board.offsetY + settings.TOPMARGIN);
                } else {
                    this.board.context.drawImage(this.drawingDead,
                                                 this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY);
+                                                this.y - this.board.offsetY + settings.TOPMARGIN);
                }
            }
 
@@ -145,7 +145,3 @@ define("level/Character",
            return Character;
        }
 );
-
-
-
-

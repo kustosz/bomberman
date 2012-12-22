@@ -1,13 +1,15 @@
-define("level/Goomba",
-       ["level/settings"],
+define("level/board/Goomba",
+       ["level/board/settings"],
        function (settings) {
 
            var i;
 
-           var Goomba = function (board, x, y, level) {
+           var Goomba = function (board, row, col, level) {
                this.board = board;
-               this.x = x;
-               this.y = y;
+               this.x = col * settings.SQUARE_WIDTH +
+                   (settings.SQUARE_WIDTH - settings.GOOMBA_WIDTH) / 2,
+               this.y = row * settings.SQUARE_HEIGHT +
+                   (settings.SQUARE_HEIGHT - settings.GOOMBA_HEIGHT) / 2
                this.level = level;
                this.width = settings.GOOMBA_WIDTH;
                this.height = settings.GOOMBA_HEIGHT;
@@ -31,11 +33,11 @@ define("level/Goomba",
                if (this.alive) {
                    this.board.context.drawImage(this.drawingsAlive[this.level],
                                                 this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY);
+                                                this.y - this.board.offsetY + settings.TOPMARGIN);
                } else {
                    this.board.context.drawImage(this.drawingsDead[this.level],
                                                 this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY);
+                                                this.y - this.board.offsetY + settings.TOPMARGIN);
                }
            }
 
@@ -200,8 +202,3 @@ define("level/Goomba",
            return Goomba;
        }
 );
-
-
-
-
-

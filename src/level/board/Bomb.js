@@ -1,5 +1,5 @@
-define("level/Bomb",
-       ["level/settings"],
+define("level/board/Bomb",
+       ["level/board/settings"],
        function (settings) {
 
            var Bomb = function (board, x, y) {
@@ -23,7 +23,7 @@ define("level/Bomb",
            Bomb.prototype.draw = function () {
                this.board.context.drawImage(this.drawing,
                                             this.x - this.board.offsetX,
-                                            this.y - this.board.offsetY);
+                                            this.y - this.board.offsetY + settings.TOPMARGIN);
            }
 
            return Bomb;

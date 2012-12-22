@@ -1,13 +1,13 @@
-define("level/Board",
-       ["level/Bricks",
-        "level/Concrete",
-        "level/Empty",
-        "level/Character",
-        "level/Bomb",
-        "level/Flames",
-        "level/Goomba",
-        "level/Door",
-        "level/settings"],
+define("level/board/Board",
+       ["level/board/Bricks",
+        "level/board/Concrete",
+        "level/board/Empty",
+        "level/board/Character",
+        "level/board/Bomb",
+        "level/board/Flames",
+        "level/board/Goomba",
+        "level/board/Door",
+        "level/board/settings"],
        function (Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, Door, settings) {
 
 
@@ -20,7 +20,7 @@ define("level/Board",
                this.options = options;
                this.context = context;
                this.paperWidth = context.canvas.width;
-               this.paperHeight = context.canvas.height;
+               this.paperHeight = context.canvas.height - settings.TOPMARGIN;
                this.width = settings.SQUARE_WIDTH * settings.COLS;
                this.height = settings.SQUARE_HEIGHT * settings.ROWS;
                this.offsetX = 0;
@@ -31,6 +31,7 @@ define("level/Board",
                this.blocks = [];
                this.character = new Character(this, options);
                this.updates = true;
+               this.finished = false;
 
                this.onSuccess = function () {
                    onSuccess();
@@ -99,17 +100,15 @@ define("level/Board",
                    }
 
                    return {
-                       x: col * settings.SQUARE_WIDTH +
-                           (settings.SQUARE_WIDTH - settings.GOOMBA_WIDTH) / 2,
-                       y: row * settings.SQUARE_HEIGHT +
-                           (settings.SQUARE_HEIGHT - settings.GOOMBA_HEIGHT) / 2
+                       row: row,
+                       col: col
                    }
                }
 
                for (i = 0; i < options.goombas.length; i += 1) {
                    for (j = 0; j < options.goombas[i]; j += 1) {
                        t = randomCoords();
-                       this.goombas.push(new Goomba(this, t.x, t.y, i));
+                       this.goombas.push(new Goomba(this, t.row, t.col, i));
                    }
                }
 
@@ -127,15 +126,17 @@ define("level/Board",
            Board.prototype.getRow = getRow;
 
            Board.prototype.update = function () {
+
+               if (!this.updates) {
+                   return;
+               }
+
                var i;
 
                if (this.checkSuccess()) {
                    this.exitSuccess();
                }
 
-               if (!this.updates) {
-                   return;
-               }
 
                this.character.update();
                for (i = 0; i < this.goombas.length; i += 1) {
@@ -184,6 +185,7 @@ define("level/Board",
                    this.goombas[i].draw();
                }
                this.character.draw();
+               this.context.fillRect(0, 0, this.width, settings.TOPMARGIN);
            }
 
            Board.prototype.detectCollisions = function (x, y, width, height, direction) {
@@ -305,8 +307,23 @@ define("level/Board",
                var flames = new Flames(this,
                                        col * settings.SQUARE_WIDTH,
                                        row * settings.SQUARE_HEIGHT);
+               var self = this;
                this.blocks[row][col].flames = flames;
                this.flames.push(flames);
+               if (row === this.door.row && col === this.door.col
+                       && this.blocks[this.door.row][this.door.col].passExplosion) {
+                   setTimeout(function () {
+                       self.addPenaltyGoombas();
+                   }, settings.FLAMES_TIMEOUT);
+               }
+           }
+
+           Board.prototype.addPenaltyGoombas = function () {
+               var i;
+               for (i = 0; i < this.options.penaltyGoombas; i += 1) {
+                   this.goombas.push(new Goomba(this, this.door.row, this.door.col,
+                                                this.options.penaltyGoombaLevel));
+               }
            }
 
            Board.prototype.deleteFlames = function (flames) {
@@ -369,6 +386,10 @@ define("level/Board",
            }
 
            Board.prototype.exitSuccess = function () {
+               if (this.finished) {
+                   return;
+               }
+               this.finished = true;
                var self = this;
                this.updates = false;
                setTimeout(function () {
@@ -377,6 +398,10 @@ define("level/Board",
            }
 
            Board.prototype.exitFailure = function () {
+               if (this.finished) {
+                   return;
+               }
+               this.finished = true;
                var self = this;
                setTimeout(function () {
                    self.onFailure();
@@ -388,8 +413,3 @@ define("level/Board",
            return Board;
        }
 );
-
-
-
-
-

@@ -1,5 +1,5 @@
-define("level/Bricks",
-       ["level/Block", "level/settings"],
+define("level/board/Bricks",
+       ["level/board/Block", "level/board/settings"],
        function (Block, settings) {
 
            var Bricks = function (board, x, y) {

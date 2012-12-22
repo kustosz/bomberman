@@ -1,5 +1,5 @@
-define("level/Door",
-       ["level/settings"],
+define("level/board/Door",
+       ["level/board/settings"],
        function (settings) {
 
            var Door = function (board, row, col) {
@@ -17,7 +17,7 @@ define("level/Door",
                if (this.board.blocks[this.row][this.col].type === "empty") {
                    this.board.context.drawImage(this.drawing,
                                                 this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY);
+                                                this.y - this.board.offsetY + settings.TOPMARGIN);
                }
            }
 

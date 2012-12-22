@@ -1,5 +1,5 @@
-define("level/Empty",
-       ["level/Block", "level/settings"],
+define("level/board/Empty",
+       ["level/board/Block", "level/board/settings"],
        function (Block, settings) {
 
            var Empty = function (board, x, y) {

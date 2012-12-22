@@ -1,5 +1,5 @@
-define("level/Flames",
-       ["level/settings"],
+define("level/board/Flames",
+       ["level/board/settings"],
        function (settings) {
 
            var Flames = function (board, x, y) {
@@ -22,10 +22,9 @@ define("level/Flames",
            Flames.prototype.draw = function () {
                this.board.context.drawImage(this.drawing,
                                             this.x - this.board.offsetX,
-                                            this.y - this.board.offsetY);
+                                            this.y - this.board.offsetY + settings.TOPMARGIN);
            }
 
            return Flames;
        }
 );
-
