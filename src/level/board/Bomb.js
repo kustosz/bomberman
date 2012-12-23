@@ -1,6 +1,7 @@
 define("level/board/Bomb",
-       ["level/board/settings"],
-       function (settings) {
+       ["utils/Timer",
+        "level/board/settings"],
+       function (Timer, settings) {
 
            var Bomb = function (board, x, y) {
                var self = this;
@@ -8,9 +9,9 @@ define("level/board/Bomb",
                this.y = y;
                this.board = board;
 
-               setTimeout(function () {
+               new Timer(function () {
                    board.detonateBomb(self);
-               }, settings.BOMB_TIMEOUT);
+               }, settings.BOMB_TIMEOUT, board.timeouts);
 
            }
 

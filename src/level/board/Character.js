@@ -2,7 +2,7 @@ define("level/board/Character",
        ["level/board/settings"],
        function (settings) {
 
-           var Character = function (board, options) {
+           var Character = function (board) {
                this.board = board;
                this.x = settings.CHARACTER_INITIAL_X;
                this.y = settings.CHARACTER_INITIAL_Y;
@@ -16,7 +16,7 @@ define("level/board/Character",
                    up: 0,
                    down: 0
                };
-               this.baseSpeed = options.characterBaseSpeed;
+               this.baseSpeed = board.skills.characterBaseSpeed;
                this.alive = true;
            }
 

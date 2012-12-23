@@ -10,9 +10,13 @@ define("level/scoreboard/Scoreboard",
                this.board = board;
                this.width = context.canvas.width;
                this.height = settings.HEIGHT;
+               this.updates = true;
            }
 
            Scoreboard.prototype.update = function () {
+               if (!this.updates) {
+                   return;
+               }
                this.time -= 1;
                if (this.time <= 0) {
                    this.board.character.die();
@@ -28,10 +32,10 @@ define("level/scoreboard/Scoreboard",
                this.context.font = settings.FONT_STYLE;
                this.context.textAlign = settings.LEVEL_TEXT_ALIGN;
                this.context.textBaseline = settings.TEXT_BASELINE;
-               this.context.fillText("Level " + this.level, settings.LEVEL_TEXT_POSITION, this.height / 2);
+               this.context.fillText("LEVEL " + this.level, settings.LEVEL_TEXT_POSITION, this.height / 2);
 
                this.context.textAlign = settings.TIME_TEXT_ALIGN;
-               this.context.fillText("time: " + this.time, this.width - settings.TIME_TEXT_POSITION, this.height / 2);
+               this.context.fillText("TIME: " + this.time, this.width - settings.TIME_TEXT_POSITION, this.height / 2);
            }
 
            return Scoreboard;

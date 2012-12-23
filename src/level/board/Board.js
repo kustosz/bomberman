@@ -1,5 +1,6 @@
 define("level/board/Board",
-       ["level/board/Bricks",
+       ["utils/Timer",
+        "level/board/Bricks",
         "level/board/Concrete",
         "level/board/Empty",
         "level/board/Character",
@@ -7,17 +8,19 @@ define("level/board/Board",
         "level/board/Flames",
         "level/board/Goomba",
         "level/board/Door",
+        "level/board/Powerup",
         "level/board/settings"],
-       function (Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, Door, settings) {
+       function (Timer, Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, Door, Powerup, settings) {
 
 
-           var Board = function (context, options, onSuccess, onFailure) {
+           var Board = function (context, options, skills, onSuccess, onFailure) {
 
                var i, j;
                var t;
                var self = this;
 
                this.options = options;
+               this.skills = skills;
                this.context = context;
                this.paperWidth = context.canvas.width;
                this.paperHeight = context.canvas.height - settings.TOPMARGIN;
@@ -29,16 +32,18 @@ define("level/board/Board",
                this.bombs = [];
                this.goombas = [];
                this.blocks = [];
-               this.character = new Character(this, options);
+               this.timeouts = [];
+               this.character = new Character(this);
                this.updates = true;
+               this.draws = true;
                this.finished = false;
 
                this.onSuccess = function () {
-                   onSuccess();
+                   onSuccess.apply(null, arguments);
                }
 
                this.onFailure = function () {
-                   onFailure();
+                   onFailure.apply(null, arguments);
                }
 
                for (i = 0; i < settings.ROWS; i += 1) {
@@ -90,6 +95,19 @@ define("level/board/Board",
 
                this.door = new Door(this, doorCoords.row, doorCoords.col);
 
+               var powCoords = {
+                   row: 0,
+                   col: 0
+               };
+
+               while (this.blocks[powCoords.row][powCoords.col].type !== 'bricks' ||
+                        (powCoords.row === doorCoords.row && powCoords.col === doorCoords.col)) {
+                   powCoords.row = Math.floor(Math.random() * (settings.ROWS - 4)) + 4;
+                   powCoords.col = Math.floor(Math.random() * (settings.COLS - 4)) + 4;
+               }
+
+               this.powerup = new Powerup(this, powCoords.row, powCoords.col, options.powerup);
+
                var randomCoords = function () {
                    var col = 0,
                        row = 0;
@@ -137,6 +155,7 @@ define("level/board/Board",
                    this.exitSuccess();
                }
 
+               this.getPowerup();
 
                this.character.update();
                for (i = 0; i < this.goombas.length; i += 1) {
@@ -161,6 +180,9 @@ define("level/board/Board",
            }
 
            Board.prototype.draw = function () {
+               if (!this.draws) {
+                   return;
+               }
                var i, j;
                var mincol = Math.floor(this.offsetX / settings.SQUARE_WIDTH),
                    minrow = Math.floor(this.offsetY / settings.SQUARE_HEIGHT),
@@ -175,6 +197,7 @@ define("level/board/Board",
                    }
                }
                this.door.draw();
+               this.powerup.draw();
                for (i = 0; i < this.bombs.length; i += 1) {
                    this.bombs[i].draw();
                }
@@ -232,7 +255,7 @@ define("level/board/Board",
 
            Board.prototype.addBomb = function (row, col) {
                if (this.blocks[row][col].bomb === null &&
-                       this.bombs.length < this.options.bombs) {
+                       this.bombs.length < this.skills.bombs) {
                    var bomb = new Bomb(this,
                                        col * settings.SQUARE_WIDTH,
                                        row * settings.SQUARE_HEIGHT);
@@ -258,25 +281,25 @@ define("level/board/Board",
                    this.bombs.splice(this.bombs.indexOf(bomb), 1);
                }
 
-               for (i = 1; i <= this.options.bombRange; i += 1) {
+               for (i = 1; i <= this.skills.bombRange; i += 1) {
                    if (!this.detonateSquare(row + i, col)) {
                        break;
                    }
                }
 
-               for (i = 1; i <= this.options.bombRange; i += 1) {
+               for (i = 1; i <= this.skills.bombRange; i += 1) {
                    if (!this.detonateSquare(row - i, col)) {
                        break;
                    }
                }
 
-               for (i = 1; i <= this.options.bombRange; i += 1) {
+               for (i = 1; i <= this.skills.bombRange; i += 1) {
                    if (!this.detonateSquare(row, col - i)) {
                        break;
                    }
                }
 
-               for (i = 1; i <= this.options.bombRange; i += 1) {
+               for (i = 1; i <= this.skills.bombRange; i += 1) {
                    if (!this.detonateSquare(row, col + i)) {
                        break;
                    }
@@ -304,6 +327,9 @@ define("level/board/Board",
 
 
            Board.prototype.addFlames = function (row, col) {
+               if (this.blocks[row][col].flames !== null) {
+                   return;
+               }
                var flames = new Flames(this,
                                        col * settings.SQUARE_WIDTH,
                                        row * settings.SQUARE_HEIGHT);
@@ -312,16 +338,22 @@ define("level/board/Board",
                this.flames.push(flames);
                if (row === this.door.row && col === this.door.col
                        && this.blocks[this.door.row][this.door.col].passExplosion) {
-                   setTimeout(function () {
-                       self.addPenaltyGoombas();
-                   }, settings.FLAMES_TIMEOUT);
+                   new Timer(function () {
+                       self.addPenaltyGoombas(self.door.row, self.door.col);
+                   }, settings.FLAMES_TIMEOUT, this.timeouts);
+               }
+               if (row === this.powerup.row && col === this.powerup.col &&
+                       !this.powerup.used && this.blocks[this.powerup.row][this.powerup.col].passExplosion) {
+                   new Timer(function () {
+                       self.addPenaltyGoombas(self.powerup.row, self.powerup.col);
+                   }, settings.FLAMES_TIMEOUT, this.timeouts);
                }
            }
 
-           Board.prototype.addPenaltyGoombas = function () {
+           Board.prototype.addPenaltyGoombas = function (row, col) {
                var i;
                for (i = 0; i < this.options.penaltyGoombas; i += 1) {
-                   this.goombas.push(new Goomba(this, this.door.row, this.door.col,
+                   this.goombas.push(new Goomba(this, row, col,
                                                 this.options.penaltyGoombaLevel));
                }
            }
@@ -392,9 +424,9 @@ define("level/board/Board",
                this.finished = true;
                var self = this;
                this.updates = false;
-               setTimeout(function () {
-                   self.onSuccess();
-               }, settings.SUCCESS_TIMEOUT);
+               new Timer(function () {
+                   self.onSuccess(self.skills);
+               }, settings.SUCCESS_TIMEOUT, this.timeouts);
            }
 
            Board.prototype.exitFailure = function () {
@@ -403,10 +435,49 @@ define("level/board/Board",
                }
                this.finished = true;
                var self = this;
-               setTimeout(function () {
+               new Timer(function () {
                    self.onFailure();
-               }, settings.GAMEOVER_TIMEOUT);
+               }, settings.GAMEOVER_TIMEOUT, this.timeouts);
            }
+
+           Board.prototype.getPowerup = function () {
+               if (this.powerup.used) {
+                   return;
+               }
+
+               var centerRow = getRow(this.character.y + this.character.height / 2),
+                   centerCol = getCol(this.character.x + this.character.width / 2);
+
+               if (centerRow === this.powerup.row && centerCol === this.powerup.col) {
+                   this.powerup.used = true;
+                   if (this.powerup.type === "addBomb") {
+                       this.skills.bombs += 1;
+                   } else if (this.powerup.type === "increaseRange") {
+                       this.skills.bombRange += 1;
+                   }
+               }
+           }
+
+           Board.prototype.pause = function () {
+               var i, len;
+               for (i = 0, len = this.timeouts.length; i < len; i += 1) {
+                   this.timeouts[i].pause();
+               }
+               this.draws = false;
+               this.updates = false;
+               this.character.alive = false;
+           }
+
+           Board.prototype.resume = function () {
+               var i, len;
+               for (i = 0, len = this.timeouts.length; i < len; i += 1) {
+                   this.timeouts[i].resume();
+               }
+               this.character.alive = true;
+               this.draws = true;
+               this.updates = true;
+           }
+
 
 
 

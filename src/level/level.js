@@ -5,8 +5,7 @@ define("level/level",
         "level/settings"],
        function (Board, blackboard, Scoreboard, settings) {
 
-           return function (context, options, lives, onPass, onGameover) {
-               console.log(Scoreboard);
+           return function (context, options, skills, onPass, onGameover) {
                var intBoard, intScoreboard;
                var oldKeydown = document.onkeydown,
                    oldKeyup = document.onkeyup;
@@ -21,25 +20,62 @@ define("level/level",
                    }, settings.BLACKBOARD_TIMEOUT);
                }
 
-               var success = function () {
+               var success = function (newSkills) {
                    clearInterval(intBoard);
                    clearInterval(intScoreboard);
                    document.onkeydown = oldKeydown;
                    document.onkeyup = oldKeyup;
                    blackboard(context, "Congratulations!", function () {
-                       onPass();
+                       onPass(newSkills);
                    }, settings.BLACKBOARD_TIMEOUT);
                }
 
                var initBoard = function () {
-                   var board = new Board(context, options, success, gameover);
-                   var scoreboard = new Scoreboard(board, context, options.level, options.time, lives);
-                   document.onkeydown = function (e) {
-                       return board.character.handleKeydown(e.keyCode);
+                   var skillsCopy = {};
+                   var i;
+                   for (i in skills) {
+                       if (skills.hasOwnProperty(i)) {
+                           skillsCopy[i] = skills[i];
+                       }
                    }
+
+                   var board = new Board(context, options, skillsCopy, success, gameover);
+                   var scoreboard = new Scoreboard(board, context, options.level, options.time, skills.lives);
+
+                   var paused = false;
+                   var pause = function () {
+                       board.pause();
+                       scoreboard.updates = !scoreboard.updates;
+                       paused = true;
+                   }
+
+                   var resume = function () {
+                       board.resume();
+                       scoreboard.updates = !scoreboard.updates;
+                       paused = false;
+                   }
+
+                   var togglePaused = function () {
+                       if (paused) {
+                           resume();
+                       } else {
+                           pause();
+                       }
+                   }
+
+                   document.onkeydown = function (e) {
+                       if (e.keyCode === 80) {
+                           togglePaused();
+                           return false;
+                       } else {
+                           return board.character.handleKeydown(e.keyCode);
+                       }
+                   }
+
                    document.onkeyup = function (e) {
                        return board.character.handleKeyup(e.keyCode);
                    }
+
                    intBoard = setInterval(function () {
                        board.update();
                        board.draw();

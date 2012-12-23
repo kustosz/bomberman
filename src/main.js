@@ -4,15 +4,17 @@ function (level) {
     var startlevel = function startlevel() {
         level(context,
             {level: "1",
-             time: 100,
+             time: 300,
              bricksDensity: 0.3,
-             characterBaseSpeed: 3,
-             bombs: 5,
-             bombRange: 3,
-             goombas: [0, 0],
+             goombas: [10, 10],
+             powerup: "addBomb",
              penaltyGoombas: 5,
              penaltyGoombaLevel: 1},
-            {},
+            {lives: 3,
+             bombs: 2,
+             bombRange: 3,
+             characterBaseSpeed: 3
+            },
             function () {
                 context.clearRect(0, 0, 1000, 560);
                 startlevel();

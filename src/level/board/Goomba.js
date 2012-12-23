@@ -1,6 +1,7 @@
 define("level/board/Goomba",
-       ["level/board/settings"],
-       function (settings) {
+       ["utils/Timer",
+        "level/board/settings"],
+       function (Timer, settings) {
 
            var i;
 
@@ -44,9 +45,9 @@ define("level/board/Goomba",
            Goomba.prototype.die = function () {
                var self = this;
                this.alive = false;
-               setTimeout(function () {
+               new Timer(function () {
                    self.board.deleteGoomba(self);
-               }, settings.GOOMBA_TIMEOUT);
+               }, settings.GOOMBA_TIMEOUT, this.board.timeouts);
            }
 
            Goomba.prototype.getDir = function (speed) {
@@ -191,6 +192,9 @@ define("level/board/Goomba",
 
            Goomba.prototype.collideWithCharacter = function (x, y, width, height) {
                var left, right, top, bottom;
+               if (!this.alive) {
+                   return false;
+               }
                top = Math.max(this.y, y);
                bottom = Math.min(this.y + this.height, y + height);
                left = Math.max(this.x, x);
