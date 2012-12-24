@@ -327,9 +327,6 @@ define("level/board/Board",
 
 
            Board.prototype.addFlames = function (row, col) {
-               if (this.blocks[row][col].flames !== null) {
-                   return;
-               }
                var flames = new Flames(this,
                                        col * settings.SQUARE_WIDTH,
                                        row * settings.SQUARE_HEIGHT);

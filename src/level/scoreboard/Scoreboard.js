@@ -13,6 +13,9 @@ define("level/scoreboard/Scoreboard",
                this.updates = true;
            }
 
+           Scoreboard.prototype.characterIcon = new Image();
+           Scoreboard.prototype.characterIcon.src = settings.CHARACTER_ICON_SRC;
+
            Scoreboard.prototype.update = function () {
                if (!this.updates) {
                    return;
@@ -25,6 +28,15 @@ define("level/scoreboard/Scoreboard",
            }
 
            Scoreboard.prototype.draw = function () {
+               var levelStr = "LEVEL " + this.level;
+               var timeStr;
+
+               if (this.updates) {
+                   timeStr = "TIME: " + this.time;
+               } else {
+                   timeStr = "PAUSED";
+               }
+
                this.context.fillStyle = settings.BACKGROUND_COLOR;
                this.context.fillRect(0, 0, this.width, this.height);
 
@@ -32,10 +44,18 @@ define("level/scoreboard/Scoreboard",
                this.context.font = settings.FONT_STYLE;
                this.context.textAlign = settings.LEVEL_TEXT_ALIGN;
                this.context.textBaseline = settings.TEXT_BASELINE;
-               this.context.fillText("LEVEL " + this.level, settings.LEVEL_TEXT_POSITION, this.height / 2);
+               this.context.fillText(levelStr, settings.LEVEL_TEXT_POSITION, this.height / 2);
 
                this.context.textAlign = settings.TIME_TEXT_ALIGN;
-               this.context.fillText("TIME: " + this.time, this.width - settings.TIME_TEXT_POSITION, this.height / 2);
+               this.context.fillText(timeStr, this.width - settings.TIME_TEXT_POSITION, this.height / 2);
+
+               this.context.drawImage(this.characterIcon,
+                                      this.width / 2 - settings.CHARACTER_ICON_WIDTH - settings.CHARACTER_ICON_RIGHT_MARGIN,
+                                      this.height / 2 - settings.CHARACTER_ICON_HEIGHT / 2);
+
+               this.context.textAlign = settings.LIVES_TEXT_ALIGN;
+               this.context.fillText("\u00d7 " + this.lives, this.width / 2 + settings.LIVES_TEXT_POSITION, this.height / 2);
+
            }
 
            return Scoreboard;

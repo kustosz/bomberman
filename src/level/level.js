@@ -15,9 +15,7 @@ define("level/level",
                    clearInterval(intScoreboard);
                    document.onkeydown = oldKeydown;
                    document.onkeyup = oldKeyup;
-                   blackboard(context, "Game Over!", function () {
-                       onGameover();
-                   }, settings.BLACKBOARD_TIMEOUT);
+                   onGameover();
                }
 
                var success = function (newSkills) {
@@ -25,9 +23,7 @@ define("level/level",
                    clearInterval(intScoreboard);
                    document.onkeydown = oldKeydown;
                    document.onkeyup = oldKeyup;
-                   blackboard(context, "Congratulations!", function () {
-                       onPass(newSkills);
-                   }, settings.BLACKBOARD_TIMEOUT);
+                   onPass(newSkills);
                }
 
                var initBoard = function () {

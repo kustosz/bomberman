@@ -1,5 +1,5 @@
 define({
-    FONT_STYLE: "20pt Arial",
+    FONT_STYLE: "17pt Arial",
     FILL_STYLE: "#fff",
     LEVEL_TEXT_ALIGN: "left",
     LEVEL_TEXT_POSITION: 10,
@@ -7,5 +7,11 @@ define({
     TIME_TEXT_POSITION: 10,
     TEXT_BASELINE: "middle",
     BACKGROUND_COLOR: "#000",
+    CHARACTER_ICON_SRC: "images/characterIcon.png",
+    CHARACTER_ICON_WIDTH: 20,
+    CHARACTER_ICON_HEIGHT: 20,
+    CHARACTER_ICON_RIGHT_MARGIN: 10,
+    LIVES_TEXT_ALIGN: "left",
+    LIVES_TEXT_POSITION: 0,
     HEIGHT: 40
 });
