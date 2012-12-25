@@ -3,6 +3,8 @@ define("level/board/Door",
        function (settings) {
 
            var Door = function (board, row, col) {
+               this.width = settings.SQUARE_WIDTH;
+               this.height = settings.SQUARE_HEIGHT;
                this.board = board;
                this.row = row;
                this.col = col;

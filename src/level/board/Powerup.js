@@ -8,6 +8,8 @@ define("level/board/Powerup",
                this.col = col;
                this.x = this.col * settings.SQUARE_WIDTH;
                this.y = this.row * settings.SQUARE_HEIGHT;
+               this.width = settings.SQUARE_WIDTH;
+               this.height = settings.SQUARE_HEIGHT;
                this.used = false;
                this.type = type;
            }
