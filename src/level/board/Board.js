@@ -37,6 +37,7 @@ define("level/board/Board",
                this.updates = true;
                this.draws = true;
                this.finished = false;
+               this.scale = 1;
 
                this.onSuccess = function () {
                    onSuccess.apply(null, arguments);
@@ -145,6 +146,17 @@ define("level/board/Board",
 
            Board.prototype.update = function () {
 
+               this.paperWidth = this.context.canvas.width;
+               this.paperHeight = this.context.canvas.height - settings.TOPMARGIN;
+               this.scale = Math.min(this.paperWidth / settings.BASE_PAPER_WIDTH,
+                                     this.paperHeight / settings.BASE_PAPER_HEIGHT);
+               if (this.scale * this.width < this.paperWidth) {
+                   this.scale = this.paperWidth / this.width;
+               }
+               if (this.scale * this.height < this.paperHeight) {
+                   this.scale = this.paperHeight / this.height;
+               }
+
                if (!this.updates) {
                    return;
                }
@@ -168,13 +180,13 @@ define("level/board/Board",
                    }
                }
 
-               this.offsetX = this.character.x - this.paperWidth / 2;
+               this.offsetX = this.character.x * this.scale - this.paperWidth / 2;
                this.offsetX = Math.max(this.offsetX, 0);
-               this.offsetX = Math.min(this.offsetX, this.width - this.paperWidth);
+               this.offsetX = Math.min(this.offsetX, this.width * this.scale - this.paperWidth);
 
-               this.offsetY = this.character.y - this.paperHeight / 2;
+               this.offsetY = this.character.y * this.scale - this.paperHeight / 2;
                this.offsetY = Math.max(this.offsetY, 0);
-               this.offsetY = Math.min(this.offsetY, this.height - this.paperHeight);
+               this.offsetY = Math.min(this.offsetY, this.height * this.scale - this.paperHeight);
 
 
            }
@@ -184,13 +196,16 @@ define("level/board/Board",
                    return;
                }
                var i, j;
-               var mincol = Math.floor(this.offsetX / settings.SQUARE_WIDTH),
-                   minrow = Math.floor(this.offsetY / settings.SQUARE_HEIGHT),
-                   minrow = Math.max(minrow, 0);
+               var mincol = Math.floor(this.offsetX / (settings.SQUARE_WIDTH * this.scale)),
+                   minrow = Math.floor(this.offsetY / (settings.SQUARE_HEIGHT * this.scale)),
                    maxcol = Math.floor((this.paperWidth + this.offsetX - 1) /
-                                            settings.SQUARE_WIDTH),
+                                            (settings.SQUARE_WIDTH * this.scale)),
                    maxrow = Math.floor((this.paperHeight + this.offsetY - 1) /
-                                            settings.SQUARE_HEIGHT);
+                                            (settings.SQUARE_HEIGHT * this.scale));
+                   mincol = Math.max(mincol, 0);
+                   minrow = Math.max(minrow, 0);
+                   maxcol = Math.min(maxcol, settings.COLS - 1);
+                   maxrow = Math.min(maxrow, settings.ROWS - 1);
                for (i = minrow; i <= maxrow; i += 1) {
                    for (j = mincol; j <= maxcol; j += 1) {
                        this.blocks[i][j].draw();
@@ -208,6 +223,7 @@ define("level/board/Board",
                    this.goombas[i].draw();
                }
                this.character.draw();
+               this.context.fillStyle = "#000";
                this.context.fillRect(0, 0, this.width, settings.TOPMARGIN);
            }
 

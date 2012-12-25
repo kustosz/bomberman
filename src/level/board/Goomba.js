@@ -31,14 +31,18 @@ define("level/board/Goomba",
            }
 
            Goomba.prototype.draw = function () {
+               var x = this.x * this.board.scale - this.board.offsetX,
+                   y = this.y * this.board.scale - this.board.offsetY,
+                   width = (this.width * this.board.scale),
+                   height = (this.height * this.board.scale);
                if (this.alive) {
                    this.board.context.drawImage(this.drawingsAlive[this.level],
-                                                this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY + settings.TOPMARGIN);
+                                                x, y + settings.TOPMARGIN,
+                                                width, height);
                } else {
                    this.board.context.drawImage(this.drawingsDead[this.level],
-                                                this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY + settings.TOPMARGIN);
+                                                x, y + settings.TOPMARGIN,
+                                                width, height);
                }
            }
 

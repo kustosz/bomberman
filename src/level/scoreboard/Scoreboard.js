@@ -17,6 +17,7 @@ define("level/scoreboard/Scoreboard",
            Scoreboard.prototype.characterIcon.src = settings.CHARACTER_ICON_SRC;
 
            Scoreboard.prototype.update = function () {
+               this.width = this.context.canvas.width;
                if (!this.updates) {
                    return;
                }

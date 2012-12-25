@@ -21,13 +21,17 @@ define("level/board/Powerup",
            Powerup.prototype.drawings["increaseRange"].src = settings.INCREASERANGE_SRC;
 
            Powerup.prototype.draw = function () {
+               var x = this.x * this.board.scale - this.board.offsetX,
+                   y = this.y * this.board.scale - this.board.offsetY,
+                   width = (this.width * this.board.scale),
+                   height = (this.height * this.board.scale);
                if (this.used) {
                    return;
                }
                if (this.board.blocks[this.row][this.col].type === "empty") {
                    this.board.context.drawImage(this.drawings[this.type],
-                                                this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY + settings.TOPMARGIN);
+                                                x, y + settings.TOPMARGIN,
+                                                width, height);
                }
            }
 

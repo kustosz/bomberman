@@ -21,9 +21,13 @@ define("level/board/Flames",
            Flames.prototype.drawing.src = settings.FLAMES_SRC;
 
            Flames.prototype.draw = function () {
+               var x = this.x * this.board.scale - this.board.offsetX,
+                   y = this.y * this.board.scale - this.board.offsetY,
+                   width = (this.width * this.board.scale),
+                   height = (this.height * this.board.scale);
                this.board.context.drawImage(this.drawing,
-                                            this.x - this.board.offsetX,
-                                            this.y - this.board.offsetY + settings.TOPMARGIN);
+                                            x, y + settings.TOPMARGIN,
+                                            width, height);
            }
 
            return Flames;

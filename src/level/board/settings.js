@@ -41,5 +41,7 @@ define({
     DOOR_SRC: "images/door.png",
     TOPMARGIN: 40,
     ADDBOMB_SRC: "images/addBomb.png",
-    INCREASERANGE_SRC: "images/increaseRange.png"
+    INCREASERANGE_SRC: "images/increaseRange.png",
+    BASE_PAPER_WIDTH: 1000,
+    BASE_PAPER_HEIGHT: 560
 });

@@ -87,14 +87,18 @@ define("level/board/Character",
            }
 
            Character.prototype.draw = function () {
+               var x = this.x * this.board.scale - this.board.offsetX,
+                   y = this.y * this.board.scale - this.board.offsetY,
+                   width = (this.width * this.board.scale),
+                   height = (this.height * this.board.scale);
                if (this.alive) {
                    this.board.context.drawImage(this.drawingAlive,
-                                                this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY + settings.TOPMARGIN);
+                                                x, y + settings.TOPMARGIN,
+                                                width, height);
                } else {
                    this.board.context.drawImage(this.drawingDead,
-                                                this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY + settings.TOPMARGIN);
+                                                x, y + settings.TOPMARGIN,
+                                                width, height);
                }
            }
 

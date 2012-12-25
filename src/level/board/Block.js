@@ -8,9 +8,13 @@ define("level/board/Block",
            }
 
            Block.prototype.draw = function () {
-                   this.board.context.drawImage(this.drawing,
-                                                this.x - this.board.offsetX,
-                                                this.y - this.board.offsetY + settings.TOPMARGIN);
+               var x = this.x * this.board.scale - this.board.offsetX,
+                   y = this.y * this.board.scale - this.board.offsetY,
+                   width = (this.width * this.board.scale),
+                   height = (this.height * this.board.scale);
+               this.board.context.drawImage(this.drawing,
+                                            x, y + settings.TOPMARGIN,
+                                            width, height);
            }
 
            return Block;
