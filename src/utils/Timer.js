@@ -1,14 +1,15 @@
 define("utils/Timer",
        [],
        function () {
-           return function (callback, timeout, stack) {
+           return function (callback, timeout, stack, bomb) {
                var timerId, start;
                var remaining = timeout;
                var self = this;
+               this.bomb = bomb;
 
                stack.push(this);
                this.pause = function () {
-                   window.clearTimeout(timerId);
+                   clearTimeout(timerId);
                    remaining -= new Date() - start;
                }
 
@@ -20,6 +21,13 @@ define("utils/Timer",
                        }
                        callback();
                    }, remaining);
+               }
+
+               this.stop = function () {
+                   clearTimeout(timerId);
+                   if (stack.indexOf(self) !== -1 ) {
+                       stack.splice(stack.indexOf(self), 1);
+                   }
                }
 
                this.resume();

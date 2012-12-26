@@ -15,6 +15,7 @@ define("level/board/Goomba",
                this.width = settings.GOOMBA_WIDTH;
                this.height = settings.GOOMBA_HEIGHT;
                this.baseSpeed = settings.GOOMBAS[level].BASE_SPEED;
+               this.wallpass = settings.GOOMBAS[level].WALLPASS;
                this.speedX = this.baseSpeed;
                this.speedY = 0;
                this.alive = true;
@@ -58,6 +59,24 @@ define("level/board/Goomba",
                return Math.floor(speed / this.baseSpeed);
            }
 
+           Goomba.prototype.getDirStr = function () {
+               if (this.speedX > 0) {
+                   return "right";
+               } else if (this.speedX < 0) {
+                   return "left";
+               } else if (this.speedY > 0) {
+                   return "down";
+               } else if (this.speedY < 0) {
+                   return "up";
+               }
+           }
+
+           Goomba.prototype.checkBlocking = function (row, col) {
+               return this.board.blocks[row][col].type === "concrete" ||
+                   this.board.blocks[row][col].bomb !== null ||
+                   (!this.wallpass && this.board.blocks[row][col].type === "bricks");
+           }
+
            Goomba.prototype.turnLeft = function (collide) {
                var row, col;
                var newX, newY;
@@ -73,7 +92,7 @@ define("level/board/Goomba",
                col = this.board.getCol(this.x) + this.getDir(newX);
                row = this.board.getRow(this.y) + this.getDir(newY);
 
-               if (collide === true || this.board.blocks[row][col].blocking === false) {
+               if (collide === true || this.checkBlocking(row, col) === false) {
                    this.speedX = newX;
                    this.speedY = newY;
                }
@@ -95,7 +114,7 @@ define("level/board/Goomba",
                col = this.board.getCol(this.x) + this.getDir(newX);
                row = this.board.getRow(this.y) + this.getDir(newY);
 
-               if (collide === true || this.board.blocks[row][col].blocking === false) {
+               if (collide === true || this.checkBlocking(row, col) === false) {
                    this.speedX = newX;
                    this.speedY = newY;
                }
@@ -112,7 +131,7 @@ define("level/board/Goomba",
                row = this.board.getRow(this.y) + this.getDir(newY);
 
 
-               if (collide === true || this.board.blocks[row][col].blocking === false) {
+               if (collide === true || this.checkBlocking(row, col) === false) {
                    this.speedX = newX;
                    this.speedY = newY;
                }
@@ -141,6 +160,8 @@ define("level/board/Goomba",
                return inCenter;
            }
 
+
+
            Goomba.prototype.update = function () {
                if (this.alive === false) {
                    return;
@@ -158,39 +179,18 @@ define("level/board/Goomba",
                    } else {
                        this.turnRight();
                    }
+               } else if (this.checkCenterPosition() &&
+                       Math.random() < settings.GOOMBAS[this.level].PR_TURN_BACK) {
+                   this.turnBack();
                }
-               if (this.speedX > 0) {
-                   if (!this.board.detectCollisions(this.x + this.speedX, this.y,
-                                                    this.width, this.height,
-                                                    "right")) {
-                       this.x += this.speedX;
-                   } else {
-                       this.turnBack(true);
-                   }
-               } else  if (this.speedX < 0) {
-                   if (!this.board.detectCollisions(this.x + this.speedX, this.y,
-                                                    this.width, this.height,
-                                                    "left")) {
-                       this.x += this.speedX;
-                   } else {
-                       this.turnBack(true);
-                   }
-               } else if (this.speedY > 0) {
-                   if (!this.board.detectCollisions(this.x, this.y + this.speedY,
-                                                    this.width, this.height,
-                                                    "down")) {
-                       this.y += this.speedY;
-                   } else {
-                       this.turnBack(true);
-                   }
-               } else if (this.speedY < 0) {
-                   if (!this.board.detectCollisions(this.x, this.y + this.speedY,
-                                                    this.width, this.height,
-                                                    "up")) {
-                       this.y += this.speedY;
-                   } else {
-                       this.turnBack(true);
-                   }
+
+               if (!this.board.detectCollisions(this.x + this.speedX, this.y + this.speedY,
+                                                this.width, this.height,
+                                                this.getDirStr(), false, this.wallpass)) {
+                   this.x += this.speedX;
+                   this.y += this.speedY;
+               } else {
+                   this.turnBack(true);
                }
            }
 
@@ -203,7 +203,7 @@ define("level/board/Goomba",
                bottom = Math.min(this.y + this.height, y + height);
                left = Math.max(this.x, x);
                right = Math.min(this.x + this.width, x + width);
-               return left <= right - 5 && top <= bottom - 5;
+               return left <= right - 10 && top <= bottom - 10;
            }
 
 

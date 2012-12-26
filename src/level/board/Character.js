@@ -17,6 +17,8 @@ define("level/board/Character",
                    down: 0
                };
                this.baseSpeed = board.skills.characterBaseSpeed;
+               this.wallpass = board.skills.wallpass;
+               this.bombpass = board.skills.bombpass;
                this.alive = true;
            }
 
@@ -41,14 +43,14 @@ define("level/board/Character",
                if (this.speedX > 0) {
                    collide = this.board.detectCollisions(this.x + this.speedX, this.y,
                                                          this.width, this.height,
-                                                         "right");
+                                                         "right", this.bombpass, this.wallpass);
                    if (!collide) {
                        this.x += this.speedX;
                    }
                } else if (this.speedX < 0) {
                    collide = this.board.detectCollisions(this.x + this.speedX, this.y,
                                                          this.width, this.height,
-                                                         "left");
+                                                         "left", this.bombpass, this.wallpass);
                    if (!collide) {
                        this.x += this.speedX;
                    }
@@ -57,14 +59,14 @@ define("level/board/Character",
                if (this.speedY > 0) {
                    collide = this.board.detectCollisions(this.x, this.y + this.speedY,
                                                          this.width, this.height,
-                                                         "down");
+                                                         "down", this.bombpass, this.wallpass);
                    if(!collide) {
                        this.y += this.speedY;
                    }
                } else if (this.speedY < 0) {
                    collide = this.board.detectCollisions(this.x, this.y + this.speedY,
                                                          this.width, this.height,
-                                                         "up");
+                                                         "up", this.bombpass, this.wallpass);
                    if(!collide) {
                        this.y += this.speedY;
                    }
@@ -136,9 +138,14 @@ define("level/board/Character",
                case 38:
                    this.directions.up = 1;
                    return false;
-               case 32:
+               case 90:
                    if (this.alive) {
                        this.board.addBomb(this.row, this.col);
+                   }
+                   return false;
+               case 88:
+                   if (this.alive) {
+                       this.board.detonateFirstBomb();
                    }
                    return false;
                }

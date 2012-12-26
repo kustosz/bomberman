@@ -5,17 +5,17 @@ define("gameloop/levels",
                {
                    level: "1",
                    time: 300,
-                   bricksDensity: 0.2,
-                   goombas: [10],
-                   powerup: "increaseRange",
+                   bricksDensity: 0.3,
+                   goombas: [6],
+                   powerup: "detonator",
                    penaltyGoombas: 5,
                    penaltyGoombaLevel: 1
                },
                {
                    level: "2",
                    time: 300,
-                   bricksDensity: 0.2,
-                   goombas: [7, 3],
+                   bricksDensity: 0.3,
+                   goombas: [3, 3],
                    powerup: "addBomb",
                    penaltyGoombas: 5,
                    penaltyGoombaLevel: 2
@@ -52,7 +52,7 @@ define("gameloop/levels",
                    time: 300,
                    bricksDensity: 0.2,
                    goombas: [0, 2, 8],
-                   powerup: "increaseRange",
+                   powerup: "addBomb",
                    penaltyGoombas: 5,
                    penaltyGoombaLevel: 2
                }

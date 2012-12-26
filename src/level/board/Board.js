@@ -227,46 +227,35 @@ define("level/board/Board",
                this.context.fillRect(0, 0, this.width, settings.TOPMARGIN);
            }
 
-           Board.prototype.detectCollisions = function (x, y, width, height, direction) {
+           Board.prototype.detectCollisions = function (x, y, width, height, direction, bombpass, wallpass) {
 
                var centerCol = getCol(x + (width / 2)),
                    centerRow = getRow(y + (height / 2));
                var collide = false;
                var blocks = this.blocks;
+               var checkBlocking = function (x, y) {
+                   var block = blocks[getRow(y)][getCol(x)],
+                       blocking = false;
+                   if (block.type === "concrete") {
+                       return true;
+                   } else if (!wallpass && block.type === "bricks") {
+                       return true;
+                   } else if (!bombpass && block.bomb !== null) {
+                       return true;
+                   }
+                   return false;
+               }
 
                if (direction === "left" && getCol(x) < centerCol) {
-                   if (blocks[getRow(y)][getCol(x)].blocking) {
-                       collide = true;
-                   }
-                   if (blocks[getRow(y + height)][getCol(x)].blocking) {
-                       collide = true;
-                   }
+                   return checkBlocking(x, y) || checkBlocking(x, y + height);
+               } else if (direction === "right" && getCol(x + width) > centerCol) {
+                   return checkBlocking(x + width, y) || checkBlocking(x + width, y + height);
+               } else if (direction === "up" && getRow(y) < centerRow) {
+                   return checkBlocking(x, y) || checkBlocking(x + width, y);
+               } else if (direction === "down" && getRow(y + height) > centerRow) {
+                   return checkBlocking(x, y + height) || checkBlocking(x + width, y + height);
                }
-               if (direction === "right" && getCol(x + width) > centerCol) {
-                   if (blocks[getRow(y)][getCol(x + width)].blocking) {
-                       collide = true;
-                   }
-                   if (blocks[getRow(y + height)][getCol(x + width)].blocking) {
-                       collide = true;
-                   }
-               }
-               if (direction === "up" && getRow(y) < centerRow) {
-                   if (blocks[getRow(y)][getCol(x)].blocking) {
-                       collide = true;
-                   }
-                   if (blocks[getRow(y)][getCol(x + width)].blocking) {
-                       collide = true;
-                   }
-               }
-               if (direction === "down" && getRow(y + height) > centerRow) {
-                   if (blocks[getRow(y + height)][getCol(x)].blocking) {
-                       collide = true;
-                   }
-                   if (blocks[getRow(y + height)][getCol(x + width)].blocking) {
-                       collide = true;
-                   }
-               }
-               return collide;
+               return false;
            }
 
            Board.prototype.addBomb = function (row, col) {
@@ -276,7 +265,6 @@ define("level/board/Board",
                                        col * settings.SQUARE_WIDTH,
                                        row * settings.SQUARE_HEIGHT);
                    this.blocks[row][col].bomb = bomb;
-                   this.blocks[row][col].blocking = true;
                    this.bombs.push(bomb);
                }
            }
@@ -291,7 +279,6 @@ define("level/board/Board",
                }
 
                this.blocks[row][col].bomb = null;
-               this.blocks[row][col].blocking = false;
                this.addFlames(row, col);
                if(this.bombs.indexOf(bomb) !== -1) {
                    this.bombs.splice(this.bombs.indexOf(bomb), 1);
@@ -390,20 +377,20 @@ define("level/board/Board",
                    col;
                var collide = false;
 
-               row = getRow(y);
-               col = getCol(x);
+               row = getRow(y + 8);
+               col = getCol(x + 8);
                if (this.blocks[row][col].flames !== null) {
                    collide = true;
                }
-               col = getCol(x + width);
+               col = getCol(x + width - 8);
                if (this.blocks[row][col].flames !== null) {
                    collide = true;
                }
-               row = getRow(y + height);
+               row = getRow(y + height - 8);
                if (this.blocks[row][col].flames !== null) {
                    collide = true;
                }
-               col = getCol(x);
+               col = getCol(x + 8);
                if (this.blocks[row][col].flames !== null) {
                    collide = true;
                }
@@ -467,7 +454,31 @@ define("level/board/Board",
                        this.skills.bombs += 1;
                    } else if (this.powerup.type === "increaseRange") {
                        this.skills.bombRange += 1;
+                   } else if (this.powerup.type === "speed") {
+                       this.skills.characterBaseSpeed += 1;
+                       this.character.baseSpeed += 1;
+                   } else if (this.powerup.type === "detonator") {
+                       this.setDetonator();
+                       this.skills.detonator = true;
                    }
+               }
+           }
+
+           Board.prototype.setDetonator = function () {
+               var i, len;
+               for (i = 0, len = this.timeouts.length; i < len; i += 1) {
+                   if (this.timeouts[i].bomb) {
+                       this.timeouts[i].stop();
+                   }
+               }
+           }
+
+           Board.prototype.detonateFirstBomb = function () {
+               if (!this.skills.detonator) {
+                   return;
+               }
+               if (this.bombs.length > 0) {
+                   this.detonateBomb(this.bombs[0]);
                }
            }
 

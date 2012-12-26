@@ -9,9 +9,11 @@ define("level/board/Bomb",
                this.y = y;
                this.board = board;
 
-               new Timer(function () {
-                   board.detonateBomb(self);
-               }, settings.BOMB_TIMEOUT, board.timeouts);
+               if (!this.board.skills.detonator) {
+                   new Timer(function () {
+                       board.detonateBomb(self);
+                   }, settings.BOMB_TIMEOUT, board.timeouts, true);
+               }
 
            }
 

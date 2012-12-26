@@ -22,6 +22,12 @@ define("level/board/Powerup",
            Powerup.prototype.drawings["increaseRange"] = new Image();
            Powerup.prototype.drawings["increaseRange"].src = settings.INCREASERANGE_SRC;
 
+           Powerup.prototype.drawings["speed"] = new Image();
+           Powerup.prototype.drawings["speed"].src = settings.SPEED_SRC;
+
+           Powerup.prototype.drawings["detonator"] = new Image();
+           Powerup.prototype.drawings["detonator"].src = settings.DETONATOR_SRC;
+
            Powerup.prototype.draw = function () {
                var x = this.x * this.board.scale - this.board.offsetX,
                    y = this.y * this.board.scale - this.board.offsetY,
