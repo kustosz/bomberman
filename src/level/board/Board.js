@@ -275,11 +275,11 @@ define("level/board/Board",
                var i = 1;
 
                if (this.blocks[row][col].bomb === null ) {
-                   return;      // bomb already detonated
+                   return;
                }
 
                this.blocks[row][col].bomb = null;
-               this.addFlames(row, col);
+               this.detonateSquare(row, col);
                if(this.bombs.indexOf(bomb) !== -1) {
                    this.bombs.splice(this.bombs.indexOf(bomb), 1);
                }
@@ -449,6 +449,7 @@ define("level/board/Board",
                    centerCol = getCol(this.character.x + this.character.width / 2);
 
                if (centerRow === this.powerup.row && centerCol === this.powerup.col) {
+                   var self = this;
                    this.powerup.used = true;
                    if (this.powerup.type === "addBomb") {
                        this.skills.bombs += 1;
@@ -460,7 +461,24 @@ define("level/board/Board",
                    } else if (this.powerup.type === "detonator") {
                        this.setDetonator();
                        this.skills.detonator = true;
+                   } else if (this.powerup.type === "bombpass") {
+                       this.skills.bombpass = true;
+                       this.character.bombpass = true;
+                   } else if (this.powerup.type === "wallpass") {
+                       this.skills.wallpass = true;
+                       this.character.wallpass = true;
+                   } else if (this.powerup.type === "flamepass") {
+                       this.skills.flamepass = true;
+                       this.character.flamepass = true;
+                   } else if (this.powerup.type === "mystery") {
+                       this.character.immortal = true;
+                       new Timer(function () {
+                           self.character.immortal = false;
+                       },
+                       Math.random() * settings.MYSTERY_MAX_TIME + settings.MYSTERY_MIN_TIME,
+                       self.timeouts);
                    }
+
                }
            }
 

@@ -83,6 +83,12 @@ define({
     INCREASERANGE_SRC: "images/increaseRange.png",
     SPEED_SRC: "images/speed.png",
     DETONATOR_SRC: "images/detonator.png",
+    BOMBPASS_SRC: "images/bombpass.png",
+    WALLPASS_SRC: "images/wallpass.png",
+    FLAMEPASS_SRC: "images/flamepass.png",
+    MYSTERY_SRC: "images/mystery.png",
+    MYSTERY_MAX_TIME: 45000,
+    MYSTERY_MIN_TIME: 15000,
     BASE_PAPER_WIDTH: 1000,
     BASE_PAPER_HEIGHT: 560
 });

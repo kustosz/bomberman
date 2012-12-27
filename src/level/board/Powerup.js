@@ -28,6 +28,18 @@ define("level/board/Powerup",
            Powerup.prototype.drawings["detonator"] = new Image();
            Powerup.prototype.drawings["detonator"].src = settings.DETONATOR_SRC;
 
+           Powerup.prototype.drawings["bombpass"] = new Image();
+           Powerup.prototype.drawings["bombpass"].src = settings.BOMBPASS_SRC;
+
+           Powerup.prototype.drawings["wallpass"] = new Image();
+           Powerup.prototype.drawings["wallpass"].src = settings.WALLPASS_SRC;
+
+           Powerup.prototype.drawings["flamepass"] = new Image();
+           Powerup.prototype.drawings["flamepass"].src = settings.FLAMEPASS_SRC;
+
+           Powerup.prototype.drawings["mystery"] = new Image();
+           Powerup.prototype.drawings["mystery"].src = settings.MYSTERY_SRC;
+
            Powerup.prototype.draw = function () {
                var x = this.x * this.board.scale - this.board.offsetX,
                    y = this.y * this.board.scale - this.board.offsetY,

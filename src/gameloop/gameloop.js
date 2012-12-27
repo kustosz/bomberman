@@ -9,12 +9,13 @@ define("gameloop/gameloop",
                var levelNum = 0;
                var skills = {
                    lives: 2,
-                   bombs: 3,
-                   bombRange: 2,
+                   bombs: 1,
+                   bombRange: 1,
                    characterBaseSpeed: 3,
                    bombpass: false,
                    wallpass: false,
-                   detonator: false
+                   detonator: false,
+                   flamepass: false
                };
                var startLevel = function () {
                    level(context, levels[levelNum], skills, passed, failed);
@@ -27,12 +28,13 @@ define("gameloop/gameloop",
                        levelNum = 0;
                        skills = {
                            lives: 2,
-                           bombs: 3,
-                           bombRange: 2,
+                           bombs: 1,
+                           bombRange: 1,
                            characterBaseSpeed: 3,
                            bombpass: false,
                            wallpass: false,
-                           detonator: false
+                           detonator: false,
+                           flamepass: false
                        };
                        blackboard(context, settings.GREETINGS_STRING, startLevel, settings.BLACKBOARD_TIMEOUT);
                    } else {
@@ -42,16 +44,20 @@ define("gameloop/gameloop",
                var failed = function () {
                    skills.lives -= 1;
                    skills.detonator = false;
+                   skills.wallpass = false;
+                   skills.bombpass = false;
+                   skills.flamepass = false;
                    if (skills.lives < 0) {
                        levelNum = 0;
                        skills = {
                            lives: 2,
-                           bombs: 3,
-                           bombRange: 2,
+                           bombs: 1,
+                           bombRange: 1,
                            characterBaseSpeed: 3,
                            bombpass: false,
                            wallpass: false,
-                           detonator: false
+                           detonator: false,
+                           flamepass: false
                        };
                        blackboard(context, settings.GAMEOVER_STRING, startLevel, settings.BLACKBOARD_TIMEOUT);
                    } else {

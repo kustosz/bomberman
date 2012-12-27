@@ -29,7 +29,7 @@ define("level/scoreboard/Scoreboard",
            }
 
            Scoreboard.prototype.draw = function () {
-               var levelStr = "LEVEL " + this.level;
+               var levelStr = "STAGE " + this.level;
                var timeStr;
 
                if (this.updates) {

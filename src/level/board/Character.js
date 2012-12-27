@@ -19,7 +19,9 @@ define("level/board/Character",
                this.baseSpeed = board.skills.characterBaseSpeed;
                this.wallpass = board.skills.wallpass;
                this.bombpass = board.skills.bombpass;
+               this.flamepass = board.skills.flamepass;
                this.alive = true;
+               this.immortal = false;
            }
 
            Character.prototype.drawingAlive = new Image();
@@ -73,7 +75,9 @@ define("level/board/Character",
                }
 
                if (this.board.collideWithFlames(this.x, this.y, this.width, this.height)) {
-                   this.die();
+                   if (!this.flamepass) {
+                       this.die();
+                   }
                }
 
                this.row = Math.floor((this.y + this.height / 2) /
@@ -84,6 +88,9 @@ define("level/board/Character",
            }
 
            Character.prototype.die = function () {
+               if (this.immortal) {
+                   return;
+               }
                this.alive = false;
                this.board.exitFailure();
            }

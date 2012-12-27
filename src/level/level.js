@@ -82,7 +82,7 @@ define("level/level",
                    }, settings.SCOREBOARD_INTERVAL);
                }
 
-               blackboard(context, "Level " + options.level, initBoard, settings.BLACKBOARD_TIMEOUT);
+               blackboard(context, "Stage " + options.level, initBoard, settings.BLACKBOARD_TIMEOUT);
            }
        }
 );
