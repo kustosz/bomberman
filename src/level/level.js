@@ -7,22 +7,16 @@ define("level/level",
 
            return function (context, options, skills, onPass, onGameover) {
                var intBoard, intScoreboard;
-               var oldKeydown = document.onkeydown,
-                   oldKeyup = document.onkeyup;
 
                var gameover = function () {
                    clearInterval(intBoard);
                    clearInterval(intScoreboard);
-                   document.onkeydown = oldKeydown;
-                   document.onkeyup = oldKeyup;
                    onGameover();
                }
 
                var success = function (newSkills) {
                    clearInterval(intBoard);
                    clearInterval(intScoreboard);
-                   document.onkeydown = oldKeydown;
-                   document.onkeyup = oldKeyup;
                    onPass(newSkills);
                }
 
@@ -86,10 +80,3 @@ define("level/level",
            }
        }
 );
-
-
-
-
-
-
-

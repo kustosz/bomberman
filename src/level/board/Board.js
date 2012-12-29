@@ -414,6 +414,9 @@ define("level/board/Board",
                if (centerRow !== this.door.row || centerCol !== this.door.col) {
                    success = false;
                }
+               if (this.blocks[this.door.row][this.door.col].type !== "empty") {
+                   success = false;
+               }
                return success;
            }
 
@@ -441,7 +444,8 @@ define("level/board/Board",
            }
 
            Board.prototype.getPowerup = function () {
-               if (this.powerup.used) {
+               if (this.powerup.used ||
+                       this.blocks[this.powerup.row][this.powerup.col].type !== "empty") {
                    return;
                }
 

@@ -5,7 +5,7 @@ define("gameloop/gameloop",
         "gameloop/settings"],
        function (levels, level, blackboard, settings) {
 
-           return function (context) {
+           return function (context, callback) {
                var levelNum = 0;
                var skills = {
                    lives: 2,
@@ -36,7 +36,7 @@ define("gameloop/gameloop",
                            detonator: false,
                            flamepass: false
                        };
-                       blackboard(context, settings.GREETINGS_STRING, startLevel, settings.BLACKBOARD_TIMEOUT);
+                       blackboard(context, settings.GREETINGS_STRING, callback, settings.BLACKBOARD_TIMEOUT);
                    } else {
                        startLevel();
                    }
@@ -59,7 +59,7 @@ define("gameloop/gameloop",
                            detonator: false,
                            flamepass: false
                        };
-                       blackboard(context, settings.GAMEOVER_STRING, startLevel, settings.BLACKBOARD_TIMEOUT);
+                       blackboard(context, settings.GAMEOVER_STRING, callback, settings.BLACKBOARD_TIMEOUT);
                    } else {
                        startLevel();
                    }

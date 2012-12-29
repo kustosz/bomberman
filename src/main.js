@@ -1,6 +1,12 @@
-requirejs(["gameloop/gameloop", "utils/resize"],
-function (gameloop) {
+requirejs(["gameloop/gameloop", "mainscreen/mainscreen", "utils/resize"],
+function (gameloop, mainscreen) {
 
     var context = document.getElementById('game').getContext("2d");
-    gameloop(context);
+    var game = function () {
+        gameloop(context, main);
+    }
+    var main = function () {
+        mainscreen(context, game);
+    }
+    main();
 });
