@@ -78,6 +78,7 @@ define({
     GAMEOVER_TIMEOUT: 1000,
     SUCCESS_TIMEOUT: 1000,
     DOOR_SRC: "images/door.png",
+    DOOR_OPENED_SRC: "images/doorOpened.png",
     TOPMARGIN: 40,
     ADDBOMB_SRC: "images/addBomb.png",
     INCREASERANGE_SRC: "images/increaseRange.png",

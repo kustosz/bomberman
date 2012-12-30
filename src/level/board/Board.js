@@ -168,6 +168,7 @@ define("level/board/Board",
                }
 
                this.getPowerup();
+               this.openDoor();
 
                this.character.update();
                for (i = 0; i < this.goombas.length; i += 1) {
@@ -202,27 +203,35 @@ define("level/board/Board",
                                             (settings.SQUARE_WIDTH * this.scale)),
                    maxrow = Math.floor((this.paperHeight + this.offsetY - 1) /
                                             (settings.SQUARE_HEIGHT * this.scale));
+
                    mincol = Math.max(mincol, 0);
                    minrow = Math.max(minrow, 0);
                    maxcol = Math.min(maxcol, settings.COLS - 1);
                    maxrow = Math.min(maxrow, settings.ROWS - 1);
+
                for (i = minrow; i <= maxrow; i += 1) {
                    for (j = mincol; j <= maxcol; j += 1) {
                        this.blocks[i][j].draw();
                    }
                }
+
                this.door.draw();
                this.powerup.draw();
+
                for (i = 0; i < this.bombs.length; i += 1) {
                    this.bombs[i].draw();
                }
+
                for (i = 0; i < this.flames.length; i += 1) {
                    this.flames[i].draw();
                }
+
                for(i = 0; i < this.goombas.length; i += 1) {
                    this.goombas[i].draw();
                }
+
                this.character.draw();
+
                this.context.fillStyle = "#000";
                this.context.fillRect(0, 0, this.width, settings.TOPMARGIN);
            }
@@ -233,6 +242,7 @@ define("level/board/Board",
                    centerRow = getRow(y + (height / 2));
                var collide = false;
                var blocks = this.blocks;
+
                var checkBlocking = function (x, y) {
                    var block = blocks[getRow(y)][getCol(x)],
                        blocking = false;
@@ -483,6 +493,14 @@ define("level/board/Board",
                        self.timeouts);
                    }
 
+               }
+           }
+
+           Board.prototype.openDoor = function () {
+               if (this.goombas.length === 0) {
+                   this.door.opened = true;
+               } else {
+                   this.door.opened = false;
                }
            }
 
