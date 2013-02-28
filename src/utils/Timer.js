@@ -1,11 +1,10 @@
 define("utils/Timer",
        [],
        function () {
-           return function (callback, timeout, stack, bomb) {
+           return function (callback, timeout, stack) {
                var timerId, start;
                var remaining = timeout;
                var self = this;
-               this.bomb = bomb;
 
                stack.push(this);
                this.pause = function () {

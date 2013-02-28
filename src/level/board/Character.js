@@ -1,5 +1,6 @@
 define("level/board/Character",
-       ["level/board/settings"],
+       ["level/board/settings",
+        "level/board/utils"],
        function (settings) {
 
            var Character = function (board) {
@@ -37,38 +38,25 @@ define("level/board/Character",
                }
 
                var collide;
-               this.speedX = this.directions.right * this.baseSpeed;
-               this.speedX -= this.directions.left * this.baseSpeed;
-               this.speedY = this.directions.down * this.baseSpeed;
-               this.speedY -= this.directions.up * this.baseSpeed;
 
-               if (this.speedX > 0) {
+               this.speedX = this.directions.right - this.directions.left;
+               this.speedY = this.directions.down - this.directions.up;
+
+               if (this.speedX != 0) {
                    collide = this.board.detectCollisions(this.x + this.speedX, this.y,
                                                          this.width, this.height,
-                                                         "right", this.bombpass, this.wallpass);
-                   if (!collide) {
-                       this.x += this.speedX;
-                   }
-               } else if (this.speedX < 0) {
-                   collide = this.board.detectCollisions(this.x + this.speedX, this.y,
-                                                         this.width, this.height,
-                                                         "left", this.bombpass, this.wallpass);
+                                                         utils.getDirX(this.speedX),
+                                                         this.bombpass, this.wallpass);
                    if (!collide) {
                        this.x += this.speedX;
                    }
                }
 
-               if (this.speedY > 0) {
+               if (this.speedY != 0) {
                    collide = this.board.detectCollisions(this.x, this.y + this.speedY,
                                                          this.width, this.height,
-                                                         "down", this.bombpass, this.wallpass);
-                   if(!collide) {
-                       this.y += this.speedY;
-                   }
-               } else if (this.speedY < 0) {
-                   collide = this.board.detectCollisions(this.x, this.y + this.speedY,
-                                                         this.width, this.height,
-                                                         "up", this.bombpass, this.wallpass);
+                                                         utils.getDirY(this.speedY),
+                                                         this.bombpass, this.wallpass);
                    if(!collide) {
                        this.y += this.speedY;
                    }
