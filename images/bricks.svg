@@ -48,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -58,7 +58,7 @@
      id="layer1"
      transform="translate(0,-992.36218)">
     <g
-       id="g3127"
+       id="g2996"
        transform="translate(-638.57153,628.57141)">
       <rect
          inkscape:export-ydpi="90"
