@@ -1,6 +1,6 @@
 define("level/board/Flames",
        ["utils/Timer",
-        "level/board/Block"
+        "level/board/Block",
         "level/board/settings"],
        function (Timer, Block, settings) {
 
