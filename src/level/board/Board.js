@@ -507,7 +507,7 @@ define("level/board/Board",
            Board.prototype.setDetonator = function () {
                var i, len;
                for (i = 0, len = this.bombs.length; i < len; i += 1) {
-                   if (this.bombs[i].hasOwnProperty(timeout)) {
+                   if (this.bombs[i].hasOwnProperty('timeout')) {
                        this.bombs[i].timeout.stop();
                    }
                }
