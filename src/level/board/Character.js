@@ -1,7 +1,7 @@
 define("level/board/Character",
        ["level/board/settings",
         "level/board/utils"],
-       function (settings) {
+       function (settings, utils) {
 
            var Character = function (board) {
                this.board = board;
@@ -41,6 +41,8 @@ define("level/board/Character",
 
                this.speedX = this.directions.right - this.directions.left;
                this.speedY = this.directions.down - this.directions.up;
+               this.speedX *= this.baseSpeed;
+               this.speedY *= this.baseSpeed;
 
                if (this.speedX != 0) {
                    collide = this.board.detectCollisions(this.x + this.speedX, this.y,
