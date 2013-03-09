@@ -9,9 +9,12 @@ define("level/board/Board",
         "level/board/Goomba",
         "level/board/Door",
         "level/board/Powerup",
+        "level/board/utils",
         "level/board/settings"],
-       function (Timer, Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, Door, Powerup, settings) {
+       function (Timer, Bricks, Concrete, Empty, Character, Bomb, Flames, Goomba, Door, Powerup, utils, settings) {
 
+           var getCol = utils.getCol;
+           var getRow = utils.getRow;
 
            var Board = function (context, options, skills, onSuccess, onFailure) {
 
@@ -132,17 +135,6 @@ define("level/board/Board",
                }
 
            }
-
-           var getCol = function (x) {
-               return Math.floor(x / settings.SQUARE_WIDTH);
-           }
-
-           var getRow = function (y) {
-               return Math.floor(y / settings.SQUARE_HEIGHT);
-           }
-
-           Board.prototype.getCol = getCol;
-           Board.prototype.getRow = getRow;
 
            Board.prototype.update = function () {
 

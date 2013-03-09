@@ -1,7 +1,8 @@
 define("level/board/Goomba",
        ["utils/Timer",
+        "level/board/utils",
         "level/board/settings"],
-       function (Timer, settings) {
+       function (Timer, utils, settings) {
 
            var i;
 
@@ -89,10 +90,10 @@ define("level/board/Goomba",
                    newX = 0;
                }
 
-               col = this.board.getCol(this.x) + this.getDir(newX);
-               row = this.board.getRow(this.y) + this.getDir(newY);
+               col = utils.getCol(this.x) + this.getDir(newX);
+               row = utils.getRow(this.y) + this.getDir(newY);
 
-               if (collide === true || this.checkBlocking(row, col) === false) {
+               if (collide || !this.checkBlocking(row, col)) {
                    this.speedX = newX;
                    this.speedY = newY;
                }
@@ -111,10 +112,10 @@ define("level/board/Goomba",
                    newY = 0;
                }
 
-               col = this.board.getCol(this.x) + this.getDir(newX);
-               row = this.board.getRow(this.y) + this.getDir(newY);
+               col = utils.getCol(this.x) + this.getDir(newX);
+               row = utils.getRow(this.y) + this.getDir(newY);
 
-               if (collide === true || this.checkBlocking(row, col) === false) {
+               if (collide || !this.checkBlocking(row, col)) {
                    this.speedX = newX;
                    this.speedY = newY;
                }
@@ -127,11 +128,11 @@ define("level/board/Goomba",
                newY = -1 * this.speedY;
                newX = -1 * this.speedX;
 
-               col = this.board.getCol(this.x) + this.getDir(newX);
-               row = this.board.getRow(this.y) + this.getDir(newY);
+               col = utils.getCol(this.x) + this.getDir(newX);
+               row = utils.getRow(this.y) + this.getDir(newY);
 
 
-               if (collide === true || this.checkBlocking(row, col) === false) {
+               if (collide || !this.checkBlocking(row, col)) {
                    this.speedX = newX;
                    this.speedY = newY;
                }
@@ -174,7 +175,7 @@ define("level/board/Goomba",
 
                if (this.checkCenterPosition() &&
                        Math.random() < settings.GOOMBAS[this.level].PR_TURN) {
-                   if (Math.random < 1 / 2) {
+                   if (Math.random() < 1 / 2) {
                        this.turnLeft();
                    } else {
                        this.turnRight();
