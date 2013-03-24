@@ -16,6 +16,7 @@ define("level/board/Goomba",
                this.width = settings.GOOMBA_WIDTH;
                this.height = settings.GOOMBA_HEIGHT;
                this.baseSpeed = settings.GOOMBAS[level].BASE_SPEED;
+               this.currentSpeed = this.baseSpeed;
                this.wallpass = settings.GOOMBAS[level].WALLPASS;
                this.speedX = this.baseSpeed;
                this.speedY = 0;
@@ -49,7 +50,7 @@ define("level/board/Goomba",
            }
 
            Goomba.prototype.getDir = function (speed) {
-               return Math.floor(speed / this.baseSpeed);
+               return speed === 0 ? 0 : Math.floor(speed / Math.abs(speed));
            }
 
            Goomba.prototype.getDirStr = function () {
@@ -155,11 +156,13 @@ define("level/board/Goomba",
 
 
 
-           Goomba.prototype.update = function () {
+           Goomba.prototype.update = function (delta) {
                if (this.alive === false) {
                    return;
                }
-
+               this.currentSpeed = this.baseSpeed * delta;
+               this.speedX = this.getDir(this.speedX) * this.currentSpeed;
+               this.speedY = this.getDir(this.speedY) * this.currentSpeed;
                if (this.board.collideWithFlames(this.x, this.y,
                                                 this.width, this.height)) {
                    this.die();

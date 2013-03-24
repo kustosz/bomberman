@@ -2,20 +2,21 @@ define("level/level",
        ["level/board/Board",
         "level/blackboard/blackboard",
         "level/scoreboard/Scoreboard",
+        "utils/Animation",
         "level/settings"],
-       function (Board, blackboard, Scoreboard, settings) {
+       function (Board, blackboard, Scoreboard, Animation, settings) {
 
            return function (context, options, skills, onPass, onGameover) {
-               var intBoard, intScoreboard;
+               var boardAnimation, intScoreboard;
 
                var gameover = function () {
-                   clearInterval(intBoard);
+                   boardAnimation.stop();
                    clearInterval(intScoreboard);
                    onGameover();
                }
 
                var success = function (newSkills) {
-                   clearInterval(intBoard);
+                   boardAnimation.stop();
                    clearInterval(intScoreboard);
                    onPass(newSkills);
                }
@@ -66,11 +67,12 @@ define("level/level",
                        return board.character.handleKeyup(e.keyCode);
                    }
 
-                   intBoard = setInterval(function () {
+                   boardAnimation = new Animation(function () {
                        board.update();
                        board.draw();
                        scoreboard.draw();
-                   }, settings.FRAME_INTERVAL);
+                   });
+                   boardAnimation.start();
                    intScoreboard = setInterval(function () {
                        scoreboard.update();
                    }, settings.SCOREBOARD_INTERVAL);

@@ -88,6 +88,8 @@ define({
     WALLPASS_SRC: "images/wallpass.png",
     FLAMEPASS_SRC: "images/flamepass.png",
     MYSTERY_SRC: "images/mystery.png",
+    BASE_TIME_DELTA: 20,
+    MAX_TIME_DELTA: 60,
     MYSTERY_MAX_TIME: 45000,
     MYSTERY_MIN_TIME: 15000,
     BASE_PAPER_WIDTH: 1000,
