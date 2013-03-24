@@ -11,14 +11,10 @@ define("level/board/Bricks",
                this.bomb = null;
                this.flames = null;
                this.passExplosion = false;
+               this.drawing = BOMBERMAN.assets.bricksIMG;
            };
 
            Bricks.prototype = new Block();
-
-           Bricks.prototype.drawing = new Image();
-           Bricks.prototype.drawing.src = settings.BRICKS_SRC;
-
-
            return Bricks;
        }
 );

@@ -9,6 +9,7 @@ define("level/board/Flames",
                this.x = x;
                this.y = y;
                this.board = board;
+               this.drawing = BOMBERMAN.assets.flamesIMG;
 
                new Timer(function () {
                    board.deleteFlames(self);
@@ -17,10 +18,6 @@ define("level/board/Flames",
 
 
            Flames.prototype = new Block();
-
-           Flames.prototype.drawing = new Image();
-           Flames.prototype.drawing.src = settings.FLAMES_SRC;
-
            return Flames;
        }
 );

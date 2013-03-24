@@ -457,26 +457,34 @@ define("level/board/Board",
                if (centerRow === this.powerup.row && centerCol === this.powerup.col) {
                    var self = this;
                    this.powerup.used = true;
-                   if (this.powerup.type === "addBomb") {
+                   switch (this.powerup.type) {
+                   case "addBomb":
                        this.skills.bombs += 1;
-                   } else if (this.powerup.type === "increaseRange") {
+                       break;
+                   case "increaseRange":
                        this.skills.bombRange += 1;
-                   } else if (this.powerup.type === "speed") {
+                       break;
+                   case "speed":
                        this.skills.characterBaseSpeed += 1;
                        this.character.baseSpeed += 1;
-                   } else if (this.powerup.type === "detonator") {
+                       break;
+                   case "detonator":
                        this.setDetonator();
                        this.skills.detonator = true;
-                   } else if (this.powerup.type === "bombpass") {
+                       break;
+                   case "bombpass":
                        this.skills.bombpass = true;
                        this.character.bombpass = true;
-                   } else if (this.powerup.type === "wallpass") {
+                       break;
+                   case "wallpass":
                        this.skills.wallpass = true;
                        this.character.wallpass = true;
-                   } else if (this.powerup.type === "flamepass") {
+                       break;
+                   case "flamepass":
                        this.skills.flamepass = true;
                        this.character.flamepass = true;
-                   } else if (this.powerup.type === "mystery") {
+                       break;
+                   case "mystery":
                        this.character.immortal = true;
                        new Timer(function () {
                            self.character.immortal = false;

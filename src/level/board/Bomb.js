@@ -15,13 +15,11 @@ define("level/board/Bomb",
                        board.detonateBomb(self);
                    }, settings.BOMB_TIMEOUT, board.timeouts, true);
                }
+               this.drawing = BOMBERMAN.assets.bombIMG;
 
            }
 
            Bomb.prototype = new Block();
-
-           Bomb.prototype.drawing = new Image();
-           Bomb.prototype.drawing.src = settings.BOMB_SRC;
 
            return Bomb;
        }

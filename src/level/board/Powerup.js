@@ -12,33 +12,8 @@ define("level/board/Powerup",
                this.height = settings.SQUARE_HEIGHT;
                this.used = false;
                this.type = type;
+               this.drawing = BOMBERMAN.assets[type + "IMG"];
            }
-
-           Powerup.prototype.drawings = {};
-
-           Powerup.prototype.drawings["addBomb"] = new Image();
-           Powerup.prototype.drawings["addBomb"].src = settings.ADDBOMB_SRC;
-
-           Powerup.prototype.drawings["increaseRange"] = new Image();
-           Powerup.prototype.drawings["increaseRange"].src = settings.INCREASERANGE_SRC;
-
-           Powerup.prototype.drawings["speed"] = new Image();
-           Powerup.prototype.drawings["speed"].src = settings.SPEED_SRC;
-
-           Powerup.prototype.drawings["detonator"] = new Image();
-           Powerup.prototype.drawings["detonator"].src = settings.DETONATOR_SRC;
-
-           Powerup.prototype.drawings["bombpass"] = new Image();
-           Powerup.prototype.drawings["bombpass"].src = settings.BOMBPASS_SRC;
-
-           Powerup.prototype.drawings["wallpass"] = new Image();
-           Powerup.prototype.drawings["wallpass"].src = settings.WALLPASS_SRC;
-
-           Powerup.prototype.drawings["flamepass"] = new Image();
-           Powerup.prototype.drawings["flamepass"].src = settings.FLAMEPASS_SRC;
-
-           Powerup.prototype.drawings["mystery"] = new Image();
-           Powerup.prototype.drawings["mystery"].src = settings.MYSTERY_SRC;
 
            Powerup.prototype.draw = function () {
                var x = this.x * this.board.scale - this.board.offsetX,
@@ -49,7 +24,7 @@ define("level/board/Powerup",
                    return;
                }
                if (this.board.blocks[this.row][this.col].type === "empty") {
-                   this.board.context.drawImage(this.drawings[this.type],
+                   this.board.context.drawImage(this.drawing,
                                                 x, y + settings.TOPMARGIN,
                                                 width, height);
                }

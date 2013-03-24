@@ -20,16 +20,8 @@ define("level/board/Goomba",
                this.speedX = this.baseSpeed;
                this.speedY = 0;
                this.alive = true;
-           }
-
-           Goomba.prototype.drawingsAlive = [];
-           Goomba.prototype.drawingsDead = [];
-
-           for (i = 0; i < settings.GOOMBAS.length; i += 1) {
-               Goomba.prototype.drawingsAlive.push(new Image());
-               Goomba.prototype.drawingsAlive[i].src = settings.GOOMBAS[i].SRC;
-               Goomba.prototype.drawingsDead.push(new Image());
-               Goomba.prototype.drawingsDead[i].src = settings.GOOMBAS[i].DEAD_SRC;
+               this.drawingAlive = BOMBERMAN.assets["goomba" + level + "IMG"];
+               this.drawingDead = BOMBERMAN.assets.goomba_deadIMG;
            }
 
            Goomba.prototype.draw = function () {
@@ -38,11 +30,11 @@ define("level/board/Goomba",
                    width = (this.width * this.board.scale),
                    height = (this.height * this.board.scale);
                if (this.alive) {
-                   this.board.context.drawImage(this.drawingsAlive[this.level],
+                   this.board.context.drawImage(this.drawingAlive,
                                                 x, y + settings.TOPMARGIN,
                                                 width, height);
                } else {
-                   this.board.context.drawImage(this.drawingsDead[this.level],
+                   this.board.context.drawImage(this.drawingDead,
                                                 x, y + settings.TOPMARGIN,
                                                 width, height);
                }

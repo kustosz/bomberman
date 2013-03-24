@@ -11,12 +11,9 @@ define("level/board/Door",
                this.x = this.col * settings.SQUARE_WIDTH;
                this.y = this.row * settings.SQUARE_HEIGHT;
                this.opened = false;
+               this.drawing = BOMBERMAN.assets.doorIMG;
+               this.drawingOpened = BOMBERMAN.assets.door_openedIMG;
            }
-
-           Door.prototype.drawing = new Image();
-           Door.prototype.drawing.src = settings.DOOR_SRC;
-           Door.prototype.drawingOpened = new Image();
-           Door.prototype.drawingOpened.src = settings.DOOR_OPENED_SRC;
 
            Door.prototype.draw = function () {
                var x = this.x * this.board.scale - this.board.offsetX,

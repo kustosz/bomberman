@@ -23,13 +23,10 @@ define("level/board/Character",
                this.flamepass = board.skills.flamepass;
                this.alive = true;
                this.immortal = false;
+               this.drawingAlive = BOMBERMAN.assets.characterIMG;
+               this.drawingDead = BOMBERMAN.assets.character_deadIMG;
            }
 
-           Character.prototype.drawingAlive = new Image();
-           Character.prototype.drawingAlive.src = settings.CHARACTER_SRC;
-
-           Character.prototype.drawingDead = new Image();
-           Character.prototype.drawingDead.src = settings.CHARACTER_DEAD_SRC;
 
            Character.prototype.update = function () {
 

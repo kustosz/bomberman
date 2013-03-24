@@ -11,12 +11,10 @@ define("level/board/Concrete",
                this.bomb = null;
                this.flames = null;
                this.passExplosion = false;
+               this.drawing = BOMBERMAN.assets.concreteIMG;
            };
 
            Concrete.prototype = new Block();
-
-           Concrete.prototype.drawing = new Image();
-           Concrete.prototype.drawing.src = settings.CONCRETE_SRC;
 
            return Concrete;
        }

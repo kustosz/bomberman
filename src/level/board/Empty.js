@@ -11,13 +11,10 @@ define("level/board/Empty",
                this.bomb = null;
                this.flames = null;
                this.passExplosion = true;
+               this.drawing = BOMBERMAN.assets.emptyIMG;
            };
 
            Empty.prototype = new Block();
-
-           Empty.prototype.drawing = new Image();
-           Empty.prototype.drawing.src = settings.EMPTY_SRC;
-
            return Empty;
        }
 );
