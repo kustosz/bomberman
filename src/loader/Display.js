@@ -8,7 +8,7 @@ define("loader/Display",
                percent.innerText = "Loading... 0%";
                bar.style.width = "0%";
                this.set = function (percentage) {
-                   percent.innerText = "Loading... " + percentage + "%";
+                   percent.textContent = "Loading... " + percentage + "%";
                    bar.style.width = percentage + "%";
                }
                this.hide = function () {

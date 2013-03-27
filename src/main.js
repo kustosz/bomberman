@@ -9,17 +9,19 @@ require.config({
         }
     }
 });
-requirejs(["gameloop/gameloop", "loader/load", "utils/resize"],
-function (gameloop, load, resize) {
+requirejs(["gameloop/gameloop", "loader/load", "menu/menu", "utils/resize"],
+function (gameloop, load, menu) {
 
     var context = document.getElementById('game').getContext("2d");
     BOMBERMAN = {};
     BOMBERMAN.assets = {};
-    var game = function () {
-        gameloop(context, game);
-        document.getElementById("container").style.display="block";
+    var mainmenu = function () {
+        menu(game);
     }
-    resize();
-    load(game);
+    var game = function () {
+        document.getElementById("game").style.display = "block";
+        gameloop(context, mainmenu);
+    }
+    load(mainmenu);
 
 });

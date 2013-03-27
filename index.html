@@ -3,11 +3,18 @@
     <head>
         <link rel="stylesheet" href="css/style.css" type="text/css" />
         <link rel="stylesheet" href="css/progressbar.css" type="text/css" />
-        <link href='http://fonts.googleapis.com/css?family=Peralta' rel='stylesheet' type='text/css'>
     </head>
     <body style="background-color: #000">
         <div id="container" style="display: none">
             <canvas id="game"> </canvas>
+            <div id="menu" style="display: none">
+                <div class="logo">
+                    <img src="images/name.svg" width="100%" />
+                </div>
+                <div class="start" id="start">START!</div>
+                <div class="copy">Marcin Kostrzewa &copy; 2013</div>
+                <div class="instructions">Instructions</div>
+            </div>
         </div>
         <div id="loading">
        	    <div class="meter animate">
@@ -17,6 +24,7 @@
                 Loading... 0%
             </div>
         </div>
-            <script data-main="src/main.js" src="src/lib/require.js"></script>
+        
+        <script data-main="src/main.js" src="src/lib/require.js"></script>
     </body>
 </html>
