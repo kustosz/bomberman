@@ -41,7 +41,6 @@ define("level/board/Board",
                this.draws = true;
                this.finished = false;
                this.scale = 1;
-               this.last_updated = new Date();
 
                this.onSuccess = function () {
                    onSuccess.apply(null, arguments);
@@ -139,12 +138,6 @@ define("level/board/Board",
 
            Board.prototype.update = function () {
 
-               var time = new Date();
-               var timedelta = time - this.last_updated;
-               timedelta = Math.min(timedelta, settings.MAX_TIME_DELTA);
-               var delta = timedelta / settings.BASE_TIME_DELTA;
-               this.last_updated = time;
-
                this.paperWidth = this.context.canvas.width;
                this.paperHeight = this.context.canvas.height - settings.TOPMARGIN;
                this.scale = Math.min(this.paperWidth / settings.BASE_PAPER_WIDTH,
@@ -169,9 +162,9 @@ define("level/board/Board",
                this.getPowerup();
                this.openDoor();
 
-               this.character.update(delta);
+               this.character.update();
                for (i = 0; i < this.goombas.length; i += 1) {
-                   this.goombas[i].update(delta);
+                   this.goombas[i].update();
                    if (this.goombas[i].collideWithCharacter(this.character.x,
                                                             this.character.y,
                                                             this.character.width,

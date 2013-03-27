@@ -28,7 +28,7 @@ define("level/board/Character",
            }
 
 
-           Character.prototype.update = function (delta) {
+           Character.prototype.update = function () {
 
                if (!this.alive) {
                    return;
@@ -40,8 +40,6 @@ define("level/board/Character",
                this.speedY = this.directions.down - this.directions.up;
                this.speedX *= this.baseSpeed;
                this.speedY *= this.baseSpeed;
-               this.speedX *= delta;
-               this.speedY *= delta;
 
                if (this.speedX != 0) {
                    collide = this.board.detectCollisions(this.x + this.speedX, this.y,
