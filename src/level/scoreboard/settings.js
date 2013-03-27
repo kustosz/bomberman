@@ -1,5 +1,5 @@
 define({
-    FONT_STYLE: "17pt Arial",
+    FONT_STYLE: "17pt Peralta",
     FILL_STYLE: "#fff",
     LEVEL_TEXT_ALIGN: "left",
     LEVEL_TEXT_POSITION: 10,
