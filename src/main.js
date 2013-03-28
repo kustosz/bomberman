@@ -9,7 +9,8 @@ require.config({
         }
     }
 });
-requirejs(["gameloop/gameloop", "loader/load", "menu/menu", "utils/resize"],
+requirejs(["gameloop/gameloop", "loader/load", "menu/menu", "utils/resize",
+           "instructions/instructions"],
 function (gameloop, load, menu) {
 
     var context = document.getElementById('game').getContext("2d");
