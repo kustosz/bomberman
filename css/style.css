@@ -21,6 +21,10 @@ html, body, div, canvas {
     overflow: hidden;
 }
 
+body {
+	background-image: url("../images/back.png");
+}
+
 canvas#game {
     position: absolute;
     top: 0;

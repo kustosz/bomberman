@@ -6,16 +6,17 @@ define("utils/resize",
            var canvas = document.getElementById("game"),
                container = canvas.parentNode,
                loading = document.getElementById("loading");
-           canvas.width = Math.min(maxWidth, window.innerWidth - 30);
-           canvas.height = Math.min(maxHeight, window.innerHeight - 30);
-           container.style.width = canvas.width + "px";
-           container.style.height = canvas.height + "px";
            var setSize = function () {
-               canvas.width = Math.min(maxWidth, window.innerWidth - 30);
-               canvas.height = Math.min(maxHeight, window.innerHeight - 30);
-               container.style.width = canvas.width + "px";
-               container.style.height = canvas.height + "px";
+               var width = Math.min(maxWidth, window.innerWidth - 30),
+                   height = Math.min(maxHeight, window.innerHeight - 30),
+                   margin = (window.innerHeight - height) / 2;
+               canvas.width = width;
+               canvas.height = height;
+               container.style.width = width + "px";
+               container.style.height = height + "px";
+               container.style['margin-top'] = margin + "px";
            }
+           setSize();
            window.addEventListener("resize", setSize);
        }
 );
